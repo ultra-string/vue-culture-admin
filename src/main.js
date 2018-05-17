@@ -10,6 +10,8 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI);
 
+require ('@/styles/scss/index.scss')
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
