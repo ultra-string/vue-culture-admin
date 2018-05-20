@@ -14,6 +14,8 @@ import UserCenter from '@/views/am-structure/UserCenter'
 import Structure from '@/views/am-structure/TreeStructure'
 /* 手艺网浮窗配置 */
 import FloatingWindow from '@/views/am-structure/FloatingWindow'
+/* 手艺网富文本编辑器 */
+import Ueditor from '@/views/am-content/addver'
 
 /** note: submenu only apppear when children.length>=1
 *   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
@@ -95,7 +97,22 @@ export const constantRouterMap = [
           icon: 'excel'
         }
       }]
-    },
+  },
+  // 富文本编辑器 Ueditor
+  {
+      path: '/addver',
+      component: Layout,
+      redirect: '/addver/index',
+      children: [{
+        path: 'index',
+        component: Ueditor,
+        name: 'ueditor',
+        meta: {
+          title: 'excel',
+          icon: 'excel'
+        }
+      }]
+  },
   {
     path: '/documentation',
     component: Layout,

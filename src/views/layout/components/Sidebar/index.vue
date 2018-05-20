@@ -8,8 +8,7 @@
       :collapse="isCollapse"
       background-color="#304156"
       text-color="#bfcbd9"
-      active-text-color="#409EFF"
-    >
+      active-text-color="#409EFF">
       <!-- <sidebar-item :routes="permission_routers"></sidebar-item> -->
         <el-menu-item index="/userCenter">
           <i class="el-icon-menu"></i>
@@ -36,7 +35,7 @@
             <span>内容管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="3-1">文章管理</el-menu-item>
+            <el-menu-item index="/addver/index">文章管理</el-menu-item>
             <el-menu-item index="3-2">头条</el-menu-item>
             <el-menu-item index="3-3">专题策划</el-menu-item>
             <el-menu-item index="3-4">广告</el-menu-item>
