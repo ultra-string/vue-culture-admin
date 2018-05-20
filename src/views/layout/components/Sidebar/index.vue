@@ -21,11 +21,11 @@
             <span>栏目管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/example/table/tree-table">网站结构</el-menu-item>
+            <el-menu-item index="/structure/index">网站结构</el-menu-item>
             <el-menu-item index="/floatingWindow/index">浮窗配置</el-menu-item>
-            <el-menu-item index="2-3">banner</el-menu-item>
-            <el-menu-item index="2-4">二维码</el-menu-item>
-            <el-menu-item index="2-5">新媒体</el-menu-item>
+            <el-menu-item index="/banner/index">banner</el-menu-item>
+            <el-menu-item index="/QRcode/index">二维码</el-menu-item>
+            <el-menu-item index="/newMedia/index">新媒体</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <!-- 内容管理 -->

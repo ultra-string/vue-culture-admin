@@ -14,6 +14,12 @@ import UserCenter from '@/views/am-structure/UserCenter'
 import Structure from '@/views/am-structure/TreeStructure'
 /* 手艺网浮窗配置 */
 import FloatingWindow from '@/views/am-structure/FloatingWindow'
+/* 手艺网banner */
+import Branner from '@/views/am-structure/Banner'
+/* 手艺网二维码 */ 
+import QRcode from '@/views/am-structure/QRcode'
+/* 手艺网二维码 */ 
+import NewMedia from '@/views/am-structure/NewMedia'
 /* 手艺网富文本编辑器 */
 import Ueditor from '@/views/am-content/addver'
 
@@ -50,7 +56,7 @@ export const constantRouterMap = [
       component: UserCenter,
       name: 'userCenter',
       meta: {
-        title: 'excel',
+        title: '用户管理',
         icon: 'excel'
       }
     }]
@@ -78,7 +84,7 @@ export const constantRouterMap = [
       component: Structure,
       name: 'structure',
       meta: {
-        title: 'excel',
+        title: '目录结构',
         icon: 'excel'
       }
     }]
@@ -93,11 +99,56 @@ export const constantRouterMap = [
         component: FloatingWindow,
         name: 'floatingWindow',
         meta: {
-          title: 'excel',
+          title: '浮窗配置',
           icon: 'excel'
         }
       }]
   },
+  // banner
+  {
+      path: '/banner',
+      component: Layout,
+      redirect: '/banner/index',
+      children: [{
+        path: 'index',
+        component: Branner,
+        name: 'banner',
+        meta: {
+          title: 'banner',
+          icon: 'excel'
+        }
+      }]
+  },
+  // 二维码 QRcode
+  {
+    path: '/QRcode',
+    component: Layout,
+    redirect: '/QRcode/index',
+    children: [{
+      path: 'index',
+      component: QRcode,
+      name: 'QRcode',
+      meta: {
+        title: '二维码',
+        icon: 'excel'
+      }
+    }]
+  },
+  // 新媒体
+  {
+    path: '/newMedia',
+    component: Layout,
+    redirect: '/newMedia/index',
+    children: [{
+      path: 'index',
+      component: NewMedia,
+      name: 'newMedia',
+      meta: {
+        title: '新媒体',
+        icon: 'excel'
+      }
+    }]
+  }, 
   // 富文本编辑器 Ueditor
   {
       path: '/addver',
@@ -108,7 +159,7 @@ export const constantRouterMap = [
         component: Ueditor,
         name: 'ueditor',
         meta: {
-          title: 'excel',
+          title: '富文本编辑器',
           icon: 'excel'
         }
       }]
