@@ -10,6 +10,19 @@
       text-color="#bfcbd9"
       active-text-color="#409EFF">
       <!-- <sidebar-item :routes="permission_routers"></sidebar-item> -->
+        <!-- <el-submenu index="1">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span>用户系统</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="/userCenter">用户信息</el-menu-item>
+            <el-menu-item index="/floatingWindow/index">用户管理系统</el-menu-item>
+            <el-menu-item index="/banner/index">文件管理系统</el-menu-item>
+            <el-menu-item index="/QRcode/index">二维码</el-menu-item>
+            <el-menu-item index="/newMedia/index">新媒体</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu> -->
         <el-menu-item index="/userCenter">
           <i class="el-icon-menu"></i>
           <span slot="title">用户信息</span>
@@ -56,7 +69,7 @@
         </el-submenu>
       </el-menu>
 
-    </el-menu>
+    
   </el-scrollbar>
 </template>
 

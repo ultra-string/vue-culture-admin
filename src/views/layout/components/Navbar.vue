@@ -3,34 +3,47 @@
     <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
 
     <breadcrumb class="breadcrumb-container"></breadcrumb>
-
+    
     <div class="right-menu">
-      <error-log class="errLog-container right-menu-item"></error-log>
+      <!-- <error-log class="errLog-container right-menu-item"></error-log> -->
 
-      <el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
+      <!-- <el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
         <screenfull class="screenfull right-menu-item"></screenfull>
-      </el-tooltip>
+      </el-tooltip> -->
 
       <!-- <lang-select class="international right-menu-item"></lang-select> -->
 
       <!-- <el-tooltip effect="dark" :content="$t('navbar.theme')" placement="bottom">
         <theme-picker class="theme-switch right-menu-item"></theme-picker>
       </el-tooltip> -->
-
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
-        <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+        <div class="avatar-wrapper clearfix">
+          <div>文件管理系统</div>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
+          <router-link to="/imageCenter/index">
             <el-dropdown-item>
-              {{$t('navbar.dashboard')}}
+              图片/视频
+            </el-dropdown-item>
+          </router-link>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-dropdown class="avatar-container right-menu-item" trigger="click">
+        <div class="avatar-wrapper clearfix">
+          <img class="user-avatar" src="~@/assets/logo.png">
+          <div>主管理员</div>
+          <i class="el-icon-caret-bottom"></i>
+        </div>
+        <el-dropdown-menu slot="dropdown">
+          <router-link to="/userInfo/index">
+            <el-dropdown-item>
+              基本资料
             </el-dropdown-item>
           </router-link>
           <a target='_blank' href="">
             <el-dropdown-item>
-              {{$t('navbar.github')}}
+              安全设置
             </el-dropdown-item>
           </a>
           <el-dropdown-item divided>
@@ -125,14 +138,21 @@ export default {
         margin-top: 5px;
         position: relative;
         .user-avatar {
+          float:left;
           width: 40px;
           height: 40px;
-          border-radius: 10px;
+          border-radius: 100%;
+          border: 1px solid #000;
+        }
+        >div {
+          float: left;
+          margin-left: 8px;
         }
         .el-icon-caret-bottom {
           position: absolute;
+          float:left;
           right: -20px;
-          top: 25px;
+          top: 20px;
           font-size: 12px;
         }
       }
