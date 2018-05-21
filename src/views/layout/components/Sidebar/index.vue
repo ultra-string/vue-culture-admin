@@ -36,10 +36,10 @@
           </template>
           <el-menu-item-group>
             <el-menu-item index="/addver/index">文章管理</el-menu-item>
-            <el-menu-item index="3-2">头条</el-menu-item>
-            <el-menu-item index="3-3">专题策划</el-menu-item>
-            <el-menu-item index="3-4">广告</el-menu-item>
-            <el-menu-item index="3-5">官方信息</el-menu-item>
+            <el-menu-item index="/headline/index">头条</el-menu-item>
+            <el-menu-item index="/thematic/index">专题策划</el-menu-item>
+            <el-menu-item index="/advertisement/index">广告</el-menu-item>
+            <el-menu-item index="/information/index">官方信息</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <!-- 访问统计 -->

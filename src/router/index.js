@@ -20,6 +20,14 @@ import Branner from '@/views/am-structure/Banner'
 import QRcode from '@/views/am-structure/QRcode'
 /* 手艺网二维码 */ 
 import NewMedia from '@/views/am-structure/NewMedia'
+/* 手艺网头条 */ 
+import Headline from '@/views/am-content/Headline'
+/* 手艺专题策划 */ 
+import Thematic from '@/views/am-content/Thematic'
+/* 手艺网广告 */ 
+import Advertisement from '@/views/am-content/Advertisement'
+/* 手艺网官方信息 */ 
+import Information from '@/views/am-content/Information'
 /* 手艺网富文本编辑器 */
 import Ueditor from '@/views/am-content/addver'
 
@@ -149,6 +157,66 @@ export const constantRouterMap = [
       }
     }]
   }, 
+  // 头条  Headline
+  {
+    path: '/headline',
+    component: Layout,
+    redirect: '/headline/index',
+    children: [{
+      path: 'index',
+      component: Headline,
+      name: 'headline',
+      meta: {
+        title: '头条',
+        icon: 'excel'
+      }
+    }]
+  }, 
+  // 专题策划
+  {
+    path: '/thematic',
+    component: Layout,
+    redirect: '/thematic/index',
+    children: [{
+      path: 'index',
+      component: Thematic,
+      name: 'thematic',
+      meta: {
+        title: '专题策划',
+        icon: 'excel'
+      }
+    }]
+  },
+  // 广告 Advertisement
+  {
+    path: '/advertisement',
+    component: Layout,
+    redirect: '/advertisement/index',
+    children: [{
+      path: 'index',
+      component: Advertisement,
+      name: 'advertisement',
+      meta: {
+        title: '广告',
+        icon: 'excel'
+      }
+    }]
+  },
+  // 官方信息 information
+  {
+    path: '/information',
+    component: Layout,
+    redirect: '/information/index',
+    children: [{
+      path: 'index',
+      component: Information,
+      name: 'information',
+      meta: {
+        title: '广告',
+        icon: 'excel'
+      }
+    }]
+  },
   // 富文本编辑器 Ueditor
   {
       path: '/addver',
