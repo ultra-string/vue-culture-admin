@@ -8,7 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-
+/* 手艺网用户系统 */
 import UserCenter from '@/views/am-structure/UserCenter'
 /* 手艺网目录结构 */
 import Structure from '@/views/am-structure/TreeStructure'
@@ -30,7 +30,7 @@ import Advertisement from '@/views/am-content/Advertisement'
 import Information from '@/views/am-content/Information'
 /* 手艺网文件管理系统 */ 
 import ImageCenter from '@/views/am-images/ImageCenter'
-/* 手艺网文件管理系统 */ 
+/* 手艺网用户管理系统 */ 
 import UserInfo from '@/views/am-user/UserInfo'
 /* 手艺网富文本编辑器 */
 import Ueditor from '@/views/am-content/addver'
@@ -72,8 +72,22 @@ export const constantRouterMap = [
         icon: 'excel'
       }
     }]
-  },
-
+  }, 
+  /* 手艺网添加的路由 */
+  // {
+  //   path: '/userInfo',
+  //   component: Layout,
+  //   redirect: '/userInfo/index',
+  //   children: [{
+  //     path: 'index',
+  //     component: UserInfo,
+  //     name: 'userInfo',
+  //     meta: {
+  //       title: '用户管理系统',
+  //       icon: 'excel'
+  //     }
+  //   }]
+  // }, 
   // {
   //   path: '',
   //   component: Layout,
