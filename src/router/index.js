@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import $store from '@/store/index'
 const _import = require('./_import_' + process.env.NODE_ENV)
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
@@ -294,25 +295,15 @@ const router =  new Router({
 
 // 判断登陆的导航钩子
 router.beforeEach((to, from, next) => {
-  // 页面刷新时，重新赋值token
-  // if (window.sessionStorage.getItem("token")) {
-  //   store.dispatch("storeToken", window.sessionStorage.getItem("token"));
-  // }
-  if (to.meta.requireAuth) {
-    store.dispatch("FROM_PATH", from.fullPath);
-    store.dispatch("TO_PATH", to.fullPath);
-    if (store.state.common.token != "" && store.state.common.token != null) {
-      next();
-    } else {
-      next({
-        path: "/login",
-        query: {
-          redirect: to.fullPath
-        }
-      });
-    }
-  } else {
-    next();
+  if($store.state.user.token != '' || to.path == '/login') {
+    next()
+  }else {
+    next({
+      path: "/login",
+      query: {
+        redirect: to.fullPath
+      }
+    });
   }
 });
 

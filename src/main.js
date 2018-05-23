@@ -16,6 +16,8 @@ import './icons' // icon
 import './errorLog'// error log
 // import './permission' // permission control
 import './mock' // simulation data
+// axios封装引入
+import { fetch, post } from '@/api/api'
 
 import * as filters from './filters' // global filters
 
@@ -30,6 +32,11 @@ Object.keys(filters).forEach(key => {
 })
 
 Vue.config.productionTip = false
+
+// post 请求使用 this.$post
+Vue.prototype.$post = post;
+// get 请求使用 this.$get
+Vue.prototype.$get = fetch;
 
 new Vue({
   el: '#app',

@@ -6,7 +6,7 @@ const user = {
     user: '',
     status: '',
     code: '',
-    token: getToken(),
+    token: '',
     name: '',
     avatar: '',
     introduction: '',
@@ -44,19 +44,23 @@ const user = {
   },
 
   actions: {
+    StoreToken({commit}, res) {
+      commit('SET_TOKEN', res);
+    },
     // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
-      return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
+    LoginByUsername({ commit }, res) {
+      // const username = userInfo.username.trim()
+      // return new Promise((resolve, reject) => {
+      //   loginByUsername(username, userInfo.password).then(response => {
+      //     const data = response.data
+      //     commit('SET_TOKEN', data.token)
+      //     setToken(response.data.token)
+      //     resolve()
+      //   }).catch(error => {
+      //     reject(error)
+      //   })
+      // })
+      // commit('SET_TOKEN', res);
     },
 
     // 获取用户信息

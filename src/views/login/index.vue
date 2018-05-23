@@ -64,7 +64,7 @@ export default {
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
+      if (value.length < 4) {
         callback(new Error('The password can not be less than 6 digits'))
       } else {
         callback()
@@ -72,8 +72,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -93,20 +93,31 @@ export default {
       }
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: '/' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+      console.log(this.loginForm.username.trim(), this.loginForm.password.trim())
+      this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim()})
+      .then(res => {
+        console.log(res.token);
+        this.$store.dispatch('StoreToken', res.token);
+        this.$router.push({path: '/'})
+        // this.$store.dispatch('STORE_TOKEN', res.token)
       })
+      .catch(err => {
+        console.log(err);
+      })
+      // this.$refs.loginForm.validate(valid => {
+      //   if (valid) {
+      //     this.loading = true
+      //     this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+      //       this.loading = false
+      //       this.$router.push({ path: '/' })
+      //     }).catch(() => {
+      //       this.loading = false
+      //     })
+      //   } else {
+      //     console.log('error submit!!')
+      //     return false
+      //   }
+      // })
     },
     afterQRScan() {
       // const hash = window.location.hash.slice(1)
