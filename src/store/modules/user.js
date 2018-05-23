@@ -4,6 +4,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     user: '',
+    userInfo: {},
     status: '',
     code: '',
     token: '',
@@ -22,6 +23,12 @@ const user = {
     },
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    CLEAR_TOKEN: (state) => {
+      state.token = '';
+    },
+    SET_USER: (state, res) => {
+      state.userInfo = res;
     },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction
@@ -44,8 +51,17 @@ const user = {
   },
 
   actions: {
+    // 保存token
     StoreToken({commit}, res) {
       commit('SET_TOKEN', res);
+    },
+    // 清除token
+    ClearToken({commit}) {
+      commit('CLEAR_TOKEN');
+    },
+    // 保存用户信息
+    StoreUser({commit}, res) {
+      commit('SET_USER', res);
     },
     // 用户名登录
     LoginByUsername({ commit }, res) {

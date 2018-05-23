@@ -5,7 +5,7 @@
 // axios 引入
 import axios from 'axios'
 // vuex 仓库引入
-import store from '@/store/index'
+import $store from '@/store/index'
 // baseUrl引入： 
 import { baseUrl } from '@/config/env'
 
@@ -43,10 +43,10 @@ axios.interceptors.response.use(function(response) {
 export function fetch(url, params = {}) {
   return new Promise((resolve, reject) => {
     // get 请求
-    
-    // url = `${url}${Lib.json2url(params)}`
     axios.get(url, {
-      params
+      headers: {
+        Authorization:`Bearer ${$store.state.user.token}`
+      }
     })
     .then(response => {
       resolve(response.data);

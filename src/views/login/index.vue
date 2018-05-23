@@ -96,10 +96,15 @@ export default {
       console.log(this.loginForm.username.trim(), this.loginForm.password.trim())
       this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim()})
       .then(res => {
-        console.log(res.token);
         this.$store.dispatch('StoreToken', res.token);
-        this.$router.push({path: '/'})
-        // this.$store.dispatch('STORE_TOKEN', res.token)
+        this.$get('/admin/user')
+        .then(res => {
+          this.$store.dispatch('StoreUser', res.data);
+          this.$router.push({path: '/'});
+        })
+        .catch( err => {
+          this.$router.push({path: '/'});
+        })
       })
       .catch(err => {
         console.log(err);
