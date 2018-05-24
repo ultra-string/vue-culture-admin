@@ -9,11 +9,20 @@ import $store from '@/store/index'
 // baseUrl引入： 
 import { baseUrl } from '@/config/env'
 
-console.log(baseUrl)
+// console.log(baseUrl)
 
-axios.defaults.headers.post['Content-Type'] = 'Content-Type: application/json'
-// baseURL配置
-axios.defaults.baseURL = baseUrl
+// axios.defaults.headers.post['Content-Type'] = 'Content-Type: application/json'
+// // baseURL配置
+// axios.defaults.baseURL = baseUrl
+
+const server = axios.create({
+  baseURL: baseUrl,
+  timeout: 10000,
+  // headers: {'Content-Type': 'Content-Type: application/json'}
+  headers: {
+    Authorization:`Bearer ${$store.state.user.token}`
+  }
+});
 
 
 
@@ -43,10 +52,10 @@ axios.interceptors.response.use(function(response) {
 export function fetch(url, params = {}) {
   return new Promise((resolve, reject) => {
     // get 请求
-    axios.get(url, {
-      headers: {
-        Authorization:`Bearer ${$store.state.user.token}`
-      }
+    server.get(url, {
+      // headers: {
+      //   Authorization:`Bearer ${$store.state.user.token}`
+      // }
     })
     .then(response => {
       resolve(response.data);
@@ -68,7 +77,7 @@ export function post(url, params = {}) {
   console.log(typeof params)
   return new Promise((resolve, reject) => {
     // post请求
-    axios.post(url, params)
+    server.post(url, params)
       .then(response => {
         console.log(response)
         resolve(response.data);

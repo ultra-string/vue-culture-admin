@@ -295,6 +295,7 @@ const router =  new Router({
 
 // 判断登陆的导航钩子
 router.beforeEach((to, from, next) => {
+  console.log(to.fullPath)
   if($store.state.user.token != '' || to.path == '/login') {
     next()
   }else {

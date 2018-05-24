@@ -20,10 +20,8 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: 'China', key: 'CN' },
-        { label: 'USA', key: 'US' },
-        { label: 'Japan', key: 'JP' },
-        { label: 'Eurozone', key: 'EU' }
+        { label: '前台用户', key: 'CN' },
+        { label: '后台用户', key: 'US' },
       ],
       activeName: 'CN',
       createdTimes: 0
@@ -31,6 +29,13 @@ export default {
   },
   created() {
     console.log(this.$route.path)
+    this.$post('/titleList/twoTitleList', {
+id: 1 ,
+titleName: ''
+})
+.then( res => {
+  console.log(res)
+})
   },
   methods: {
     showCreatedTimes() {

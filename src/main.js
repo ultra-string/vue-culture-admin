@@ -18,6 +18,7 @@ import './errorLog'// error log
 import './mock' // simulation data
 // axios封装引入
 import { fetch, post } from '@/api/api'
+import { posts } from '@/api/tokenApi'
 
 import * as filters from './filters' // global filters
 
@@ -37,6 +38,8 @@ Vue.config.productionTip = false
 Vue.prototype.$post = post;
 // get 请求使用 this.$get
 Vue.prototype.$get = fetch;
+// 8084 的get请求
+Vue.prototype.$posts = posts;
 
 new Vue({
   el: '#app',

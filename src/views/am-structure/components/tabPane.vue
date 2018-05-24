@@ -1,7 +1,7 @@
 <template>
   <el-table :data="list" border fit highlight-current-row style="width: 100%">
 
-    <el-table-column align="center" label="ID" width="65"  v-loading="loading"
+    <el-table-column align="center" label="用户名" width="65"  v-loading="loading"
     element-loading-text="请给我点时间！">
       <template slot-scope="scope">
         <span>{{scope.row.id}}</span>
@@ -89,6 +89,7 @@ export default {
       this.$emit('create') // for test
       fetchList(this.listQuery).then(response => {
         this.list = response.data.items
+        console.log(this.list)
         this.loading = false
       })
     }

@@ -97,7 +97,7 @@ export default {
       this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim()})
       .then(res => {
         this.$store.dispatch('StoreToken', res.token);
-        this.$get('/admin/user')
+        this.$get('/user')
         .then(res => {
           this.$store.dispatch('StoreUser', res.data);
           this.$router.push({path: '/'});
