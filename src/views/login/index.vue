@@ -2,21 +2,30 @@
   <div class="login-container">
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
-        <h3 class="title">{{$t('login.title')}}</h3>
+        <h3 class="title">中国手艺网后台管理系统</h3>
         <!-- <lang-select class="set-language"></lang-select> -->
       </div>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username" />
+        <el-input name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="请输入用户名" />
       </el-form-item>
+      <!-- 验证码 -->
+      <el-row class="clearfix">
+        <el-form-item prop="smscode" class="fl"  style="width:50%">
+          <el-input style="width:100%" name="smscode" type="text" v-model="loginForm.smscode" autoComplete="on" placeholder="请输入验证码" />
+        </el-form-item>
+        <div class="fr" @click="getSmsCode">
+          <img style="height: 44px" :src="this.smscodeImg" alt="">
+        </div>
+      </el-row>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password" />
+        <el-input name="password" :type="passwordType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="请输入密码" />
         <span class="show-pwd" @click="showPwd">
           <svg-icon icon-class="eye" />
         </span>
@@ -65,14 +74,17 @@ export default {
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 4) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('The password can not be less than 4 digits'))
       } else {
         callback()
       }
     }
     return {
+      smsSend: false,
+      smscodeImg: `http://118.190.152.1:8084/imageVali/`,
       loginForm: {
         username: '',
+        smscode: '',
         password: ''
       },
       loginRules: {
@@ -85,6 +97,10 @@ export default {
     }
   },
   methods: {
+    // 获取验证码
+    getSmsCode: function() {
+      this.smscodeImg = `http://118.190.152.1:8084/imageVali/?time=${new Date().getTime()}`;
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -94,9 +110,10 @@ export default {
     },
     handleLogin() {
       console.log(this.loginForm.username.trim(), this.loginForm.password.trim())
-      this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim()})
+      this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim(),code: this.loginForm.smscode})
       .then(res => {
-        this.$store.dispatch('StoreToken', res.token);
+        console.log(res.data)
+        this.$store.dispatch('StoreToken', res.data);
         this.$get('/admin/user')
         .then(res => {
           this.$store.dispatch('StoreUser', res.data);

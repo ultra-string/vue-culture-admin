@@ -8,9 +8,24 @@ const _import = require('./_import_' + process.env.NODE_ENV)
 Vue.use(Router)
 
 /* Layout */
-import Layout from '../views/layout/Layout'
+import Layout from '@/views/layout/Layout'
+/* UserLayout */
+import UserLayout from '@/views/am-layout-user/Layout'
+/* MediaLayout */
+import MediaLayout from '@/views/am-layout-media/Layout'
+/*     
+*   图片、我的图片、视频、我的视频
+*/
+import AllImg from '@/views/am-media/AllImg'
+import MyImg from '@/views/am-media/MyImg'
+import AllVideo from '@/views/am-media/AllVideo'
+import MyVideo from '@/views/am-media/MyVideo'
 /* 手艺网用户系统 */
 import UserCenter from '@/views/am-structure/UserCenter'
+/* 手艺网前台用户系统 */
+import FountUser from '@/views/am-user/FountUser'
+/* 手艺网后台用户系统 */
+import AdminUser from '@/views/am-user/AdminUser'
 /* 手艺网目录结构 */
 import Structure from '@/views/am-structure/TreeStructure'
 /* 手艺网浮窗配置 */
@@ -73,6 +88,76 @@ export const constantRouterMap = [
         icon: 'excel'
       }
     }]
+  }, 
+  // 用户管理模块
+  {
+    path: '/userModule',
+    component: UserLayout,
+    redirect: '/userModule/fountuser/index',
+    children: [
+      {
+        path: '/userModule/fountuser/index',
+        component: FountUser,
+        name: 'fountuser',
+        meta: {
+          title: '前台用户管理',
+          icon: 'excel'
+        }
+      },
+      {
+        path: '/userModule/adminuser/index',
+        component: AdminUser,
+        name: 'adminuser',
+        meta: {
+          title: '后台用户管理',
+          icon: 'excel'
+        }
+      }
+    ]
+  }, 
+  // 图片管理模块 MediaLayout
+  {
+    path: '/mediaModule',
+    component: MediaLayout,
+    redirect: '/mediaModule/allImg',
+    children: [
+      {
+        path: '/mediaModule/allImg',
+        component: AllImg,
+        name: 'allImg',
+        meta: {
+          title: '图片',
+          icon: 'excel'
+        }
+      },
+      {
+        path: '/mediaModule/myImg',
+        component: MyImg,
+        name: 'myImg',
+        meta: {
+          title: '我的图片',
+          icon: 'excel'
+        }
+      },
+      {
+        path: '/mediaModule/allVideo',
+        component: AllVideo,
+        name: 'allVideo',
+        meta: {
+          title: '视频',
+          icon: 'excel'
+        }
+      },
+      {
+        path: '/mediaModule/myVideo',
+        component: MyVideo,
+        name: 'myVideo',
+        meta: {
+          title: '我的视频',
+          icon: 'excel'
+        }
+      }
+    ]
   }, 
   /* 手艺网添加的路由 */
   // {

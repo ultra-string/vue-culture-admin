@@ -33,7 +33,7 @@
         <el-menu-item class="fl" index="/userCenterr">官网管理系统</el-menu-item>
       </router-link>
       <router-link to="/userModule/fountuser/index">
-        <el-menu-item class="fl" index="/userModule/fountuser">用户管理系统</el-menu-item>
+        <el-menu-item class="fl" index="/userModule/fountuser/index">用户管理系统</el-menu-item>
       </router-link>
       <router-link to="/mediaModule/allImg">
         <el-menu-item class="fl" index="/mediaModule/allImg">图片管理系统</el-menu-item>
