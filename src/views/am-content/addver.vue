@@ -1,13 +1,156 @@
 <template>
-  <div id="app">
-    <el-select v-model="value" placeholder="请选择">
-      <el-option
-        v-for="item in oneIdOptions"
-        :key="item.id"
-        :label="item.titleName"
-        :value="item.id">
-      </el-option>
-    </el-select>
+  <div class="am-content">
+    <el-row :gutter="20"  style="marginTop:10px;">
+      <el-col :span="6" class="clearfix">
+        <div class="searchTitle fl">一级标题</div>
+        <el-select class="fl" v-model="oneIdValue.titleName" placeholder="请选择" @change="oneIdChange()">
+          <el-option
+            v-for="item in oneIdOptions"
+            :key="item.id"
+            :label="item.titleName"
+            :value="item.titleName">
+          </el-option>
+        </el-select>
+      </el-col>
+
+      <el-col :span="6" class="clearfix">
+        <div class="searchTitle fl">二级标题</div>
+        <el-select class="fl" v-model="twoIdValue.titleName" placeholder="请选择">
+          <el-option
+            v-for="item in twoIdOptions"
+            :key="item.id"
+            :label="item.titleName"
+            :value="item.titleName">
+          </el-option>
+        </el-select>
+      </el-col>
+
+      <el-col :span="6">
+        <el-row>
+            <el-col :span="6"><div class="searchTitle">作者：</div></el-col>
+            <el-col :span="18"><el-input class="" v-model="input" placeholder="请输入内容"></el-input></el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="20" style="marginTop:10px;">
+      <el-col :span="6">
+        <el-row>
+            <el-col :span="8"><div class="searchTitle">关键词：</div></el-col>
+            <el-col :span="16"><el-input class="" v-model="input" placeholder="请输入内容"></el-input></el-col>
+        </el-row>
+      </el-col>
+
+      <el-col :span="6">
+        <el-row>
+            <el-col :span="6"><div class="searchTitle">标题</div></el-col>
+            <el-col :span="18"><el-input class="" v-model="input" placeholder="请输入内容"></el-input></el-col>
+        </el-row>
+      </el-col>
+
+      <el-col :span="8">
+        <el-row>
+            <el-col :span="8"><div class="searchTitle">开始时间：</div></el-col>
+            <el-col :span="14"><el-input class="" v-model="input" placeholder="请输入内容"></el-input></el-col>
+        </el-row>
+      </el-col>
+
+    </el-row>
+
+    <el-row :gutter="20" style="marginTop:10px;">
+      <el-col :span="8">
+        <el-row>
+            <el-col :span="8"><div class="searchTitle">结束时间：</div></el-col>
+            <el-col :span="14"><el-input class="" v-model="input" placeholder="请输入内容"></el-input></el-col>
+        </el-row>
+      </el-col>
+
+      <el-col :span="6" class="clearfix">
+        <div class="searchTitle fl">状态：</div>
+        <el-select class="fl" v-model="stausValue" placeholder="请选择">
+          <el-option
+            v-for="item in stausOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-col>
+
+      <el-col :span="6">
+        <el-row>
+          <el-button type="primary">查找</el-button>
+          <el-button type="warning">添加文章</el-button>
+        </el-row>
+      </el-col>
+
+    </el-row>
+
+
+    <el-table :key='tableKey' :data="this.backMsg"  border fit highlight-current-row
+      style="width: 100%;marginTop:20px;">
+      <el-table-column align="center" label="编号" width="65">
+        <template slot-scope="scope">
+          <span>{{scope.row.serialNumber}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="平台名称" min-width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.name}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" label="url链接" min-width="100">
+        <template slot-scope="scope">
+          <span>{{scope.row.url}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="150px" align="center" label="更新日期">
+        <template slot-scope="scope">
+          <span>{{scope.row.updateTime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column min-width="150px" align="center" label="状态">
+        <template slot-scope="scope">
+          <span v-if="scope.row.status == 0">下架</span>
+          <span v-else-if="scope.row.status == 1">上架</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
+        <el-form-item label="编号" prop="title">
+          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
+          <el-input v-else v-model="temp.serialNumber"></el-input>
+        </el-form-item>
+        <el-form-item label="平台名称" prop="title">
+          <el-input v-model="temp.name"></el-input>
+        </el-form-item>
+        <el-form-item label="url链接" prop="title">
+          <el-input v-model="temp.url"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
+        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
+      </div>
+    </el-dialog>
+
+
+
+
+
+
+
+
       <div>
         <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button>
         <UEditor :config=config ref="ueditor"></UEditor>
@@ -23,7 +166,67 @@
       components: {UEditor},
       data(){
         return {
-          oneIdOptions: [],
+          input: '',
+          tableKey: 0,
+          rules: {
+            type: [{ required: true, message: 'type is required', trigger: 'change' }],
+            timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
+            title: [{ required: false, message: 'title is required', trigger: 'blur' }]
+          },
+          viewOptions: {
+            "author": "",
+            "bodyTitle": "",
+            "endTime": "",
+            "keywords": "",
+            "oneId": "",
+            "pageNo": "",
+            "pageSize": "",
+            "startTime": "",
+            "status": "",
+            "twoId": ""
+          },
+          oneIdOptions: [
+
+          ],
+          oneIdValue: {},
+          oneFilterJson: {},
+          twoIdOptions: [
+
+          ],
+          twoIdValue: {},
+          twoFilterJson: {},
+          stausOptions: [
+            {
+              value: '选项1',
+              label: '上架'
+            }, {
+              value: '选项2',
+              label: '下架'
+            }
+          ],
+          stausValue: '',
+          backMsg: [],
+          list: null,
+          temp: {
+            id: undefined,
+            importance: 1,
+            remark: '',
+            timestamp: new Date(),
+            title: '',
+            type: '',
+            status: 'published'
+          },
+          // 修改的弹窗
+          dialogFormVisible: false,
+          // 添加的弹框
+          dialogFormAdd: false,
+          dialogStatus: '',
+          textMap: {
+            update: '修改',
+            create: '删除',
+            add: '添加'
+          },
+
           config: {
             //可以在此处定义工具栏的内容
             // toolbars: [
@@ -47,13 +250,195 @@
         this.$get('/admin/titleList/oneTitleList')
         .then(res => {
           console.log(res)
+          this.oneIdValue = res.data[0];
           this.oneIdOptions = res.data;
+          this.$post('/admin/titleList/twoTitleList', {
+            id: res.data[0].id
+          })
+          .then( res => {
+              this.twoIdValue = res.data[0];
+              this.twoIdOptions = res.data;
+
+              
+          })
+          .catch( err => {
+
+          })
         })
         .then(err => {
 
         })
       },
       methods: {
+        // 根据数组中的json的key返回数组的某一项
+        arrChooseJson: function() {
+          this.backMsg = this.backMsg.filter(function(v){
+            return row.id !== v.id;
+          });
+        },
+        // 更改一级标题
+        oneIdChange: function(vId) {
+          alert(vId)
+          let obj = {};
+          obj = this.oneIdOptions.find((item) => {//这里的userList就是上面遍历的数据源
+              return item.titleName === this.oneIdValue.titleName;//筛选出匹配数据
+          });
+          console.log(obj.id);//我这边的name就是对应label的
+
+          let filterJson = {};
+          for(let i=0;i<this.oneIdOptions.length;i++) {
+            if(this.oneIdOptions[i].titleName == this.oneIdValue.titleName) {
+              filterJson = this.oneIdOptions[i]
+            }
+          }
+          this.oneFilterJson = filterJson;
+          console.log(filterJson)
+          this.$post('/admin/titleList/twoTitleList', {
+              id: this.oneFilterJson.id
+            })
+            .then( res => {
+                this.twoIdValue = res.data[0];
+                this.twoIdOptions = res.data;
+            })
+            .catch( err => {
+
+            })
+        },
+        // 首次加载或者查询
+        changeViewTab: function() {
+            this.$post('/admin/body/articleSearch', {
+              "author": "string",
+              "bodyTitle": "string",
+              "endTime": "string",
+              "keywords": "string",
+              "oneId": 0,
+              "pageNo": 0,
+              "pageSize": 0,
+              "startTime": "string",
+              "status": 0,
+              "twoId": 0
+            })
+            .then(res => {
+
+            })
+            .catch( err => {
+
+            })
+        },
+
+        andleModifyStatus(row, status) {
+
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+                this.$post('/admin/body/articleStatChenge', {
+                    "articleOrTitleLink": 1,
+                    "id": row.id,
+                    "status": 2
+                  })
+                  .then(res => {
+                    this.backMsg = this.backMsg.filter(function(v){
+                      return row.id !== v.id;
+                    });
+                    console.log(this.backMsg)
+                    this.$message({
+                      message: '操作成功',
+                      type: 'success'
+                    })
+                  })
+                  .catch( err => {
+                    this.$message({
+                      message: err,
+                      type: '操作失败'
+                    })
+                  })
+            }).catch(() => {
+              this.$message({
+                type: 'info',
+                message: '已取消删除'
+              });          
+            });
+        },
+        resetTemp() {
+          this.temp = {
+            id: undefined,
+            importance: 1,
+            remark: '',
+            timestamp: new Date(),
+            title: '',
+            status: 'published',
+            type: ''
+          }
+        },
+        handleCreate() {
+          this.resetTemp()
+          this.dialogFormAdd = true
+          console.log(this.temp)
+          // this.$nextTick(() => {
+          //   this.$refs['dataFormAdd'].validate((valid) => {
+              
+          //   })
+          // })
+        },
+        // 修改
+        updateData() {
+            // console.log(this.$refs['dataForm'])
+          this.$refs['dataForm'].validate((valid) => {
+            if (valid) {
+              const tempData = Object.assign({}, this.temp)
+              tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+              console.log(tempData)
+              this.$post('/admin/titleLink/publish', {
+                  "id": tempData.id,
+                  "name": tempData.name,
+                  "type": 3,
+                  "url": tempData.url
+              })
+              .then(res => {
+                  for (const v of this.backMsg) {
+                    if (v.id === this.temp.id) {
+                      const index = this.backMsg.indexOf(v)
+                      this.backMsg.splice(index, 1, this.temp)
+                      break
+                    }
+                  }
+                  this.dialogFormVisible = false
+                  this.$notify({
+                    title: '成功',
+                    message: '更新成功',
+                    type: 'success',
+                    duration: 2000
+                  })
+              })
+              .catch( err => {
+                  this.$notify({
+                    title: '失败',
+                    message: err,
+                    type: 'success',
+                    duration: 2000
+                  })
+              })
+              // updateArticle(tempData).then(() => {
+              //   for (const v of this.list) {
+              //     if (v.id === this.temp.id) {
+              //       const index = this.list.indexOf(v)
+              //       this.list.splice(index, 1, this.temp)
+              //       break
+              //     }
+              //   }
+              //   this.dialogFormVisible = false
+              //   this.$notify({
+              //     title: '成功',
+              //     message: '更新成功',
+              //     type: 'success',
+              //     duration: 2000
+              //   })
+              // })
+            }
+          })
+        },
         //获取文档内容
         getContent: function(){
           let content = this.$refs.ueditor.getUEContent();
@@ -64,3 +449,14 @@
   }
 
 </script>
+
+<style lang="scss">
+.am-content{ 
+  .searchTitle{
+    border: 1px solid #ccc;
+    line-height: 34px;
+    padding: 0 10px;
+  }
+}
+</style>
+
