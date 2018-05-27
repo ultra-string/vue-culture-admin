@@ -7,6 +7,7 @@ const user = {
     userInfo: {},
     status: '',
     code: '',
+    // token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUyODAxNjM2NCwiaWF0IjoxNTI3NDExNTY0fQ.zBKT8gw2AfO1CV33TzyXVWOAyeu4B535bHqSTfzKHbShHVQ-zDcivgTPHulM-RKGJA7i_vNNwZ2htnDfdw4Ngw',
     token: '',
     name: '',
     avatar: '',

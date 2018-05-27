@@ -1,5 +1,13 @@
 <template>
   <div id="app">
+    <el-select v-model="value" placeholder="请选择">
+      <el-option
+        v-for="item in oneIdOptions"
+        :key="item.id"
+        :label="item.titleName"
+        :value="item.id">
+      </el-option>
+    </el-select>
       <div>
         <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button>
         <UEditor :config=config ref="ueditor"></UEditor>
@@ -15,6 +23,7 @@
       components: {UEditor},
       data(){
         return {
+          oneIdOptions: [],
           config: {
             //可以在此处定义工具栏的内容
             // toolbars: [
@@ -33,6 +42,16 @@
           },
           addFormVisible: false
         }
+      },
+      created() {
+        this.$get('/admin/titleList/oneTitleList')
+        .then(res => {
+          console.log(res)
+          this.oneIdOptions = res.data;
+        })
+        .then(err => {
+
+        })
       },
       methods: {
         //获取文档内容
