@@ -16,12 +16,12 @@ import { baseUrl } from '@/config/env'
 // axios.defaults.baseURL = baseUrl
 
 const server = axios.create({
-  baseURL: baseUrl,
+  baseURL: '/apis',
   timeout: 10000,
   // headers: {'Content-Type': 'Content-Type: application/json'}
-  headers: {
-    Authorization:`Bearer ${$store.state.user.token}`
-  }
+  // headers: {
+  //   Authorization:`Bearer ${$store.state.user.token}`
+  // }
 });
 
 
@@ -53,9 +53,9 @@ export function fetch(url, params = {}) {
   return new Promise((resolve, reject) => {
     // get 请求
     server.get(url, {
-      // headers: {
-      //   Authorization:`Bearer ${$store.state.user.token}`
-      // }
+      headers: {
+        Authorization:`Bearer ${$store.state.user.token}`
+      }
     })
     .then(response => {
       resolve(response.data);
@@ -77,7 +77,14 @@ export function post(url, params = {}) {
   console.log(typeof params)
   return new Promise((resolve, reject) => {
     // post请求
-    server.post(url, params)
+    axios({
+      method: 'post',
+      url: `${baseUrl}${url}`,
+      data: params,
+      headers: {
+        Authorization:`Bearer ${$store.state.user.token}`
+      }
+    })
       .then(response => {
         console.log(response)
         resolve(response.data);
