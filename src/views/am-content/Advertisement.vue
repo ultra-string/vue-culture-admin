@@ -1,6 +1,5 @@
 <template>
   <div class="tab-container">
-    <!-- <el-tag>mounted times ：{{createdTimes}}</el-tag> -->
     <el-tabs style='margin-top:15px;' v-model="activeName" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :label="item.label" :key='item.key' :name="item.key">
         <keep-alive>
