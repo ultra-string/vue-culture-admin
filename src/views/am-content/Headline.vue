@@ -1,10 +1,10 @@
 <template>
   <div class="tab-container">
-    <el-tag>mounted times ：{{createdTimes}}</el-tag>
+    <!-- <el-tag>mounted times ：{{createdTimes}}</el-tag> -->
     <el-tabs style='margin-top:15px;' v-model="activeName" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :label="item.label" :key='item.key' :name="item.key">
         <keep-alive>
-          <tab-pane v-if='activeName==item.key' :type='item.key' @create='showCreatedTimes'></tab-pane>
+          <tab-pane v-if='activeName==item.key' :type='item.type' @create='showCreatedTimes'></tab-pane>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import tabPane from './components/tabPane'
+import tabPane from './components/headlineTab'
 
 export default {
   name: 'tab',
@@ -20,9 +20,9 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '首页头条配置', key: 'CN' },
-        { label: '专题策划一组', key: 'US' },
-        { label: '专题策划二组', key: 'JP' }
+        { label: '首页头条配置', key: 'CN', type: 1 },
+        { label: '专题策划一组', key: 'US', type: 5 },
+        { label: '专题策划二组', key: 'JP', type: 6 }
       ],
       activeName: 'CN',
       createdTimes: 0

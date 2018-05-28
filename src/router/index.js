@@ -361,7 +361,7 @@ export const constantRouterMap = [
         component: Ueditor,
         name: 'ueditor',
         meta: {
-          title: '富文本编辑器',
+          title: '文章管理',
           icon: 'excel'
         }
       }]
