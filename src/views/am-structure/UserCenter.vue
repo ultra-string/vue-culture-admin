@@ -86,7 +86,7 @@ export default {
         "author": "",       //  展示页面： ''   ,   搜索 ： 名称
         "bodyTitle": "",    //  标题
         "endTime": "",      // 结束时间
-        "keywords": "新文章",     // 开始时间
+        "keywords": "",     // 开始时间
         "oneId": 2,               // 一级标题    必填
         "pageNo": 1,              // 页数
         "pageSize": 10,            // 查询条数

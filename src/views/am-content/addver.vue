@@ -3,7 +3,7 @@
     <el-row :gutter="20"  style="marginTop:10px;">
       <el-col :span="6" class="clearfix">
         <div class="searchTitle fl">一级标题</div>
-        <el-select class="fl" v-model="oneIdValue.titleName" placeholder="请选择" @change="oneIdChange()">
+        <el-select class="fl" v-model="oneIdValue" placeholder="请选择" @change="oneIdChange">
           <el-option
             v-for="item in oneIdOptions"
             :key="item.id"
@@ -15,7 +15,7 @@
 
       <el-col :span="6" class="clearfix">
         <div class="searchTitle fl">二级标题</div>
-        <el-select class="fl" v-model="twoIdValue.titleName" placeholder="请选择">
+        <el-select class="fl" v-model="twoIdValue" placeholder="请选择" @change="twoIdChange">
           <el-option
             v-for="item in twoIdOptions"
             :key="item.id"
@@ -67,20 +67,20 @@
 
       <el-col :span="6" class="clearfix">
         <div class="searchTitle fl">状态：</div>
-        <el-select class="fl" v-model="stausValue" placeholder="请选择">
+        <el-select class="fl" v-model="stausValue" placeholder="" @change="statusChange">
           <el-option
             v-for="item in stausOptions"
-            :key="item.value"
+            :key="item.status"
             :label="item.label"
-            :value="item.value">
+            :value="item.label">
           </el-option>
         </el-select>
       </el-col>
 
       <el-col :span="6">
         <el-row>
-          <el-button type="primary">查找</el-button>
-          <el-button type="warning">添加文章</el-button>
+          <el-button type="primary" @click="changeViewTab">查找</el-button>
+          <el-button type="warning" @click="addContent">添加文章</el-button>
         </el-row>
       </el-col>
 
@@ -179,32 +179,32 @@
             "endTime": "",
             "keywords": "",
             "oneId": "",
-            "pageNo": "",
-            "pageSize": "",
+            "pageNo": 1,
+            "pageSize": 20,
             "startTime": "",
-            "status": "",
+            "status": 1,
             "twoId": ""
           },
           oneIdOptions: [
 
           ],
-          oneIdValue: {},
+          oneIdValue: '',
           oneFilterJson: {},
           twoIdOptions: [
 
           ],
-          twoIdValue: {},
+          twoIdValue: '',
           twoFilterJson: {},
           stausOptions: [
             {
-              value: '选项1',
+              status: 1,
               label: '上架'
             }, {
-              value: '选项2',
+              status: 0,
               label: '下架'
             }
           ],
-          stausValue: '',
+          stausValue: '上架',
           backMsg: [],
           list: null,
           temp: {
@@ -250,16 +250,19 @@
         this.$get('/admin/titleList/oneTitleList')
         .then(res => {
           console.log(res)
-          this.oneIdValue = res.data[0];
+          this.oneIdValue = res.data[0].titleName;
           this.oneIdOptions = res.data;
+          this.oneFilterJson = res.data[0];
+          this.viewOptions.oneId = res.data[0].id;
           this.$post('/admin/titleList/twoTitleList', {
             id: res.data[0].id
           })
           .then( res => {
-              this.twoIdValue = res.data[0];
+              this.twoIdValue = res.data[0].titleName;
               this.twoIdOptions = res.data;
-
-              
+              this.twoFilterJson = res.data[0];  
+              this.viewOptions.twoId = res.data[0].id;
+              this.changeViewTab()
           })
           .catch( err => {
 
@@ -270,62 +273,59 @@
         })
       },
       methods: {
-        // 根据数组中的json的key返回数组的某一项
-        arrChooseJson: function() {
-          this.backMsg = this.backMsg.filter(function(v){
-            return row.id !== v.id;
-          });
-        },
         // 更改一级标题
-        oneIdChange: function(vId) {
-          alert(vId)
+        oneIdChange: function() {
           let obj = {};
-          obj = this.oneIdOptions.find((item) => {//这里的userList就是上面遍历的数据源
-              return item.titleName === this.oneIdValue.titleName;//筛选出匹配数据
+          obj = this.oneIdOptions.find((item)=>{
+              return item.titleName == this.oneIdValue;
           });
-          console.log(obj.id);//我这边的name就是对应label的
+          this.oneFilterJson = obj
+          this.viewOptions.oneId = obj.id;
 
-          let filterJson = {};
-          for(let i=0;i<this.oneIdOptions.length;i++) {
-            if(this.oneIdOptions[i].titleName == this.oneIdValue.titleName) {
-              filterJson = this.oneIdOptions[i]
-            }
-          }
-          this.oneFilterJson = filterJson;
-          console.log(filterJson)
           this.$post('/admin/titleList/twoTitleList', {
               id: this.oneFilterJson.id
             })
             .then( res => {
-                this.twoIdValue = res.data[0];
+                this.twoIdValue = res.data[0].titleName;
                 this.twoIdOptions = res.data;
+                this.twoFilterJson = res.data[0];
+                this.viewOptions.twoId = res.data[0].id;
             })
             .catch( err => {
 
             })
+        },
+        // 更改二级标题
+        twoIdChange: function() {
+          let obj = {};
+          obj = this.twoIdOptions.find((item)=>{
+              return item.titleName == this.twoIdValue;
+          });
+          this.twoFilterJson = obj
+          this.viewOptions.twoId = obj.id;
+        },
+        // 更改上下架状态
+        statusChange: function() {
+          let obj = {};
+          obj = this.stausOptions.find((item)=>{
+              return item.label == this.stausValue;
+          });
+          this.viewOptions.status = obj.status;
         },
         // 首次加载或者查询
         changeViewTab: function() {
-            this.$post('/admin/body/articleSearch', {
-              "author": "string",
-              "bodyTitle": "string",
-              "endTime": "string",
-              "keywords": "string",
-              "oneId": 0,
-              "pageNo": 0,
-              "pageSize": 0,
-              "startTime": "string",
-              "status": 0,
-              "twoId": 0
-            })
+            this.$post('/admin/body/articleSearch', this.viewOptions)
             .then(res => {
-
+              this.backMsg = res.data.list;
             })
             .catch( err => {
 
             })
         },
+        // 添加文章按钮
+        addContent: function() {
 
+        },
         andleModifyStatus(row, status) {
 
           this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
