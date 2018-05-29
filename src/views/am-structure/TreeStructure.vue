@@ -5,10 +5,23 @@
       <a href="https://github.com/PanJiaChen/vue-element-admin/tree/master/src/components/TreeTable" target="_blank">Documentation</a>
     </el-tag> -->
 
-    <tree-table :data="data" :columns="columns" border></tree-table>
+    <!-- <tree-table :data="data" :columns="columns" border></tree-table> -->
+    <img src="~@/assets/tree.png" alt="">
+    
 
   </div>
 </template>
+
+<style scoped>
+.app-container{
+  width: 100%;
+  height: 100%;
+}
+img{
+  width: 100%;
+}
+</style>
+
 
 <script>
 /**

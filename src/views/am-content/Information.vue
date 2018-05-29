@@ -1,10 +1,10 @@
 <template>
   <div class="tab-container">
-    <el-tag>mounted times ：{{createdTimes}}</el-tag>
+    <!-- <el-tag>mounted times ：{{createdTimes}}</el-tag> -->
     <el-tabs style='margin-top:15px;' v-model="activeName" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :label="item.label" :key='item.key' :name="item.key">
         <keep-alive>
-          <tab-pane v-if='activeName==item.key' :type='item.key' @create='showCreatedTimes'></tab-pane>
+          <tab-pane v-if='activeName==item.key' :info='item.info' @create='showCreatedTimes'></tab-pane>
         </keep-alive>
       </el-tab-pane>
     </el-tabs>
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import tabPane from './components/tabPane'
+import tabPane from './components/infoTab'
 
 export default {
   name: 'tab',
@@ -20,10 +20,12 @@ export default {
   data() {
     return {
       tabMapOptions: [
-        { label: '联系我们', key: 'CN' },
-        { label: '友情链接', key: 'US' },
-        { label: '政策隐私', key: 'JP' },
-        { label: '使用条款', key: 'Eurozone'}
+        { label: '联系我们', key: 'CN', info: {mode: 1, oneId:100, twoId:1000} },
+        { label: '友情链接', key: 'US', info: {mode: 2} },
+        { label: '政策隐私', key: 'JP', info: {mode: 1, oneId:100, twoId:1001} },
+        { label: '使用条款', key: 'SB',info: {mode: 1, oneId:100, twoId:1002}},
+        { label: '公告', key: 'CD', info: {mode: 1, oneId:100, twoId:1003} },
+        { label: '招聘', key: 'FK', info: {mode: 1, oneId:100, twoId:1004}}
       ],
       activeName: 'CN',
       createdTimes: 0
