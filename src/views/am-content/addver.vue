@@ -1,5 +1,90 @@
 <template>
   <div class="am-content">
+    <div v-show="infoUpdate">
+       <el-row>
+            <el-col :span="12" class="clearfix">
+              <div class="searchTitle fl">一级标题</div>
+              <el-select class="fl" v-model="oneIdValue" placeholder="请选择" @change="oneIdChange">
+                <el-option
+                  v-for="item in oneIdOptions"
+                  :key="item.id"
+                  :label="item.titleName"
+                  :value="item.titleName">
+                </el-option>
+              </el-select>
+            </el-col>
+
+            <el-col :span="12" class="clearfix">
+              <div class="searchTitle fl">二级标题</div>
+              <el-select class="fl" v-model="twoIdValue" placeholder="请选择" @change="twoIdChange">
+                <el-option
+                  v-for="item in twoIdOptions"
+                  :key="item.id"
+                  :label="item.titleName"
+                  :value="item.titleName">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-row>
+
+          <el-row  style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">标题</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.bodyTitle" placeholder="请输入内容"></el-input></el-col>
+          </el-row>
+
+          <el-row  style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">作者：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.author" placeholder="请输入内容"></el-input></el-col>
+          </el-row>
+
+          <el-row  style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">摘要：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.summary" placeholder="请输入内容"></el-input></el-col>
+          </el-row>
+
+          <el-row style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">关键词：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.keyword" placeholder="请输入内容"></el-input></el-col>
+          </el-row>
+
+          <el-row style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">缩略图：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+          </el-row>
+         
+          <el-row style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">列表图：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+          </el-row>
+
+          <el-row style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">主视图：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+          </el-row>
+          
+          <el-row style="marginTop:10px;">
+              <el-col :span="2"><div class="searchTitle">视频：</div></el-col>
+              <el-col :span="10"><el-input class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+          </el-row>
+
+        <div>
+          <button size="primary" type="info" icon="plus" @click="getContent">获取内容</button>
+          <UEditor style="marginTop:10px;" :config=config ref="ueditor"></UEditor>
+        </div>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="infoUpdate = false">取消</el-button>
+          <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
+          <el-button v-else type="primary" @click="updateData">发布文章</el-button>
+        </div>
+    </div>
+
+
+
+
       <el-row :gutter="20"  style="marginTop:10px;">
         <el-col :span="6" class="clearfix">
           <div class="searchTitle fl">一级标题</div>
@@ -125,7 +210,8 @@
         </el-table-column>
       </el-table>
 
-      <div style="margin:10px auto">
+      <!-- 分页 -->
+      <!-- <div style="margin:10px auto">
         <el-pagination
           
           @size-change="handleSizeChange"
@@ -135,7 +221,7 @@
           layout="total, prev, pager, next"
           :total="100">
         </el-pagination>
-      </div>
+      </div> -->
       
 
       <!-- 修改对话框 -->
@@ -317,6 +403,7 @@
       components: {UEditor},
       data(){
         return {
+          infoUpdate: false,
           currentPage1: 1,
           input: '',
           tableKey: 0,
@@ -336,6 +423,32 @@
             "startTime": "",
             "status": 1,
             "twoId": ""
+          },
+          changeOptions: {
+            // "author": "jason",
+            // "bodyTitle": "新文章",
+            // "frontViewLink": "",     //  主视图的url
+            // "id": 0,                       // 文章id   0--首次发布   修改---文章id
+            // "keyword": "新文章",
+            // "listViewLink": "",      // 列表图的url
+            // "mainBody": "<div>我是一个新文章</div>",          // html     
+            // "oneId": 2,                   
+            // "summary": "新文章",          // 摘要
+            // "thumbnailLink": "",    // 缩略图的url
+            // "twoId": 1,
+            // "videoLink": ""         // 视频 url 
+            "author": "",
+            "bodyTitle": "",
+            "frontViewLink": "",
+            "id": 0,
+            "keyword": "",
+            "listViewLink": "",
+            "mainBody": "",
+            "oneId": 0,
+            "summary": "",
+            "thumbnailLink": "",
+            "twoId": 0,
+            "videoLink": ""
           },
           oneIdOptions: [
 
@@ -374,9 +487,8 @@
           dialogFormAdd: false,
           dialogStatus: '',
           textMap: {
-            update: '修改',
-            create: '删除',
-            add: '添加'
+            update: '修改文章',
+            add: '删除文章'
           },
 
           config: {
@@ -498,9 +610,11 @@
         },
         // 添加
         handleCreate() {
-          this.resetTemp()
-          this.dialogFormAdd = true
-          console.log(this.temp)
+          // this.resetTemp()
+          this.infoUpdate = true;
+
+          // this.dialogFormAdd = true
+          // console.log(this.temp)
           // this.$nextTick(() => {
           //   this.$refs['dataFormAdd'].validate((valid) => {
               
@@ -593,18 +707,19 @@
             type: ''
           }
         },
-        handleCreate() {
-          this.resetTemp()
-          this.dialogFormAdd = true
-          console.log(this.temp)
-          // this.$nextTick(() => {
-          //   this.$refs['dataFormAdd'].validate((valid) => {
-              
-          //   })
-          // })
-        },
         // 修改
         updateData() {
+          this.changeOptions.mainBody = this.$refs.ueditor.getUEContent();
+
+          this.$post('/admin/body/articlePublish', this.changeOptions)
+          .then( res => {
+            if(add) {
+              // this.backMsg.unshift(res.)
+            }
+          })
+
+
+
             // console.log(this.$refs['dataForm'])
           this.$refs['dataForm'].validate((valid) => {
             if (valid) {
@@ -641,22 +756,6 @@
                     duration: 2000
                   })
               })
-              // updateArticle(tempData).then(() => {
-              //   for (const v of this.list) {
-              //     if (v.id === this.temp.id) {
-              //       const index = this.list.indexOf(v)
-              //       this.list.splice(index, 1, this.temp)
-              //       break
-              //     }
-              //   }
-              //   this.dialogFormVisible = false
-              //   this.$notify({
-              //     title: '成功',
-              //     message: '更新成功',
-              //     type: 'success',
-              //     duration: 2000
-              //   })
-              // })
             }
           })
         },
