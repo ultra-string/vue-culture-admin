@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container calendar-list-container">
+  <div class="app-container calendar-list-container">44444
     <div class="filter-container">
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
@@ -164,10 +164,12 @@ export default {
   },
   created() {
       // 浮窗配置  /file/upload/image
-     this.$post(`/admin/titleLink/search`, {
-      type: 3,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
-      pageNo: 1,  // 页数 
-      pageSize: 20   // 请求多少条
+     this.$post(`/admin/friendLink/search`, {
+      // type: 3,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+      // pageNo: 1,  // 页数 
+      // pageSize: 20   // 请求多少条
+       "pageNo": 1,
+       "pageSize": 10
     })
     .then( res => {
         this.backMsg = res.data.list;

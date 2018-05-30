@@ -817,7 +817,6 @@
         },
         // 删除
         handleModifyStatus(row, status) {
-          alert(row.titleId)
           this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
@@ -922,7 +921,6 @@
               console.log('up=====>', this.changeOptions)
               let index = 0;
               if(this.changeMode == "change") {
-                alert('修改')
                 let obj = {};
                 obj = this.backMsg.find( (item) => {
                   return item.titleId == this.changeOptions.id;
@@ -948,47 +946,6 @@
               this.infoUpdate = false;
               this.opacityStyle = true;
           })
-
-
-
-            // console.log(this.$refs['dataForm'])
-          // this.$refs['dataForm'].validate((valid) => {
-          //   if (valid) {
-          //     const tempData = Object.assign({}, this.temp)
-          //     tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          //     console.log(tempData)
-          //     this.$post('/admin/titleLink/publish', {
-          //         "id": tempData.id,
-          //         "name": tempData.name,
-          //         "type": 3,
-          //         "url": tempData.url
-          //     })
-          //     .then(res => {
-          //         for (const v of this.backMsg) {
-          //           if (v.id === this.temp.id) {
-          //             const index = this.backMsg.indexOf(v)
-          //             this.backMsg.splice(index, 1, this.temp)
-          //             break
-          //           }
-          //         }
-          //         this.dialogFormVisible = false
-          //         this.$notify({
-          //           title: '成功',
-          //           message: '更新成功',
-          //           type: 'success',
-          //           duration: 2000
-          //         })
-          //     })
-          //     .catch( err => {
-          //         this.$notify({
-          //           title: '失败',
-          //           message: err,
-          //           type: 'success',
-          //           duration: 2000
-          //         })
-          //     })
-          //   }
-          // })
         },
         handleSizeChange(val) {
           console.log(`每页 ${val} 条`);
