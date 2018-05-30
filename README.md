@@ -2,6 +2,10 @@
 
 
 
+{ "code": "000000", "data": { "pageNum": 1, "pageSize": 2, "size": 2, "startRow": 0, "endRow": 1, "total": 2, "pages": 1, "list": [ { "serialNumber": 2, "id": 3, "name": "测试首页广告", "url": "http://e.hiphotos.baidu.com/image/pic/item/8601a18b87d6277fca09b19924381f30e924fc7c.jpg", "img_url": null, "createTime": "2018-05-19", "updateTime": "2018-05-19", "location": 1, "status": 0 }, { "serialNumber": 3, "id": 4, "name": "测试专题策划广告", "url": "http://e.hiphotos.baidu.com/image/pic/item/8601a18b87d6277fca09b19924381f30e924fc7c.jpg", "img_url": null, "createTime": "2018-05-19", "updateTime": "2018-05-19", "location": 2, "status": 0 } ], "prePage": 0, "nextPage": 0, "isFirstPage": true, "isLastPage": true, "hasPreviousPage": false, "hasNextPage": false, "navigatePages": 8, "navigatepageNums": [ 1 ], "navigateFirstPage": 1, "navigateLastPage": 1, "firstPage": 1, "lastPage": 1 }, "msg": "操作成功", "successFlag": true }
+
+
+
 //当前页
 private int pageNum;
 //每页的数量

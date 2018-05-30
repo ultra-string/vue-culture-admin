@@ -39,7 +39,10 @@
       },
       getContentTxt: function(){
         return this.editor.getContentTxt();
-      }
+      },
+      setContent: function(data) {
+        return this.editor.setContent(data)
+      },
     }
   }
 </script>
