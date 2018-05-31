@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container calendar-list-container">44444
+  <div class="app-container calendar-list-container">
     <div class="filter-container">
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
@@ -11,11 +11,13 @@
           <span>{{scope.row.serialNumber}}</span>
         </template>
       </el-table-column>
+
       <el-table-column label="平台名称" min-width="100">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
       </el-table-column>
+
       <el-table-column class-name="status-col" label="url链接" min-width="100">
         <template slot-scope="scope">
           <span>{{scope.row.url}}</span>
@@ -24,12 +26,6 @@
       <el-table-column width="150px" align="center" label="更新日期">
         <template slot-scope="scope">
           <span>{{scope.row.updateTime}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column min-width="150px" align="center" label="状态">
-        <template slot-scope="scope">
-          <span v-if="scope.row.status == 0">下架</span>
-          <span v-else-if="scope.row.status == 1">上架</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
@@ -43,12 +39,8 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="编号" prop="title">
-          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
-          <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="平台名称" prop="title">
-          <el-input v-model="temp.name"></el-input>
+        <el-form-item label="" prop="title">
+          <img :src="temp.img_url" alt="" style="width: 300px; height: 200px;">
         </el-form-item>
         <el-form-item label="url链接" prop="title">
           <el-input v-model="temp.url"></el-input>
@@ -63,13 +55,31 @@
 
     <el-dialog title="新增" :visible.sync="dialogFormAdd">
       <el-form :rules="rules" ref="dataFormAdd" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="编号" prop="title">
+        <!-- <el-form-item label="编号" prop="title">
           <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
           <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="平台名称" prop="title">
-          <el-input v-model="temp.name"></el-input>
+          <el-select
+            v-model="value9"
+            :multiple="false"
+            :filterable="true"
+            :remote="true"
+            reserve-keyword
+            placeholder="请输入关键词"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options4"
+              :key="item.id"
+              :label="item.path"
+              :value="item.path">
+            </el-option>
+          </el-select>
         </el-form-item>
+
+         
+
         <el-form-item label="url链接" prop="title">
           <el-input v-model="temp.url"></el-input>
         </el-form-item>
@@ -94,14 +104,51 @@
 </template>
 
 <script>
+import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
+import waves from '@/directive/waves' // 水波纹指令
+import { parseTime } from '@/utils'
+
+const calendarTypeOptions = [
+  { key: 'CN', display_name: 'China' },
+  { key: 'US', display_name: 'USA' },
+  { key: 'JP', display_name: 'Japan' },
+  { key: 'EU', display_name: 'Eurozone' }
+]
+
+// arr to obj ,such as { CN : "China", US : "USA" }
+const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
+  acc[cur.key] = cur.display_name
+  return acc
+}, {})
 
 export default {
   name: 'complexTable',
-  props: {
-    info: Object
+  directives: {
+    waves
   },
   data() {
     return {
+      options4: [],
+      value9: [],
+      ImgList: [],
+      loading: false,
+      states: ["Alabama", "Alaska", "Arizona",
+      "Arkansas", "California", "Colorado",
+      "Connecticut", "Delaware", "Florida",
+      "Georgia", "Hawaii", "Idaho", "Illinois",
+      "Indiana", "Iowa", "Kansas", "Kentucky",
+      "Louisiana", "Maine", "Maryland",
+      "Massachusetts", "Michigan", "Minnesota",
+      "Mississippi", "Missouri", "Montana",
+      "Nebraska", "Nevada", "New Hampshire",
+      "New Jersey", "New Mexico", "New York",
+      "North Carolina", "North Dakota", "Ohio",
+      "Oklahoma", "Oregon", "Pennsylvania",
+      "Rhode Island", "South Carolina",
+      "South Dakota", "Tennessee", "Texas",
+      "Utah", "Vermont", "Virginia",
+      "Washington", "West Virginia", "Wisconsin",
+      "Wyoming"],
       backMsg: [],
       tableKey: 0,
       list: null,
@@ -163,19 +210,47 @@ export default {
     }
   },
   created() {
+    
       // 浮窗配置  /file/upload/image
      this.$post(`/admin/friendLink/search`, {
-      // type: 3,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
-      // pageNo: 1,  // 页数 
-      // pageSize: 20   // 请求多少条
-       "pageNo": 1,
-       "pageSize": 10
+      "pageNo": 1,
+      "pageSize": 10
     })
     .then( res => {
         this.backMsg = res.data.list;
     })
   },
   methods: {
+    // 新增图片选择
+    remoteMethod(query) {
+      
+
+      if (query !== '') {
+        this.loading = true;
+        this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=1000&name=${query}`)
+        .then( res => {
+          this.loading = false;
+          this.options4 = res.data.list;
+          console.log(res)
+        })
+        .catch( err => {
+          this.loading = false;
+        })
+
+
+
+        // this.loading = true;
+        // setTimeout(() => {
+        //   this.loading = false;
+        //   this.options4 = this.list.filter(item => {
+        //     return item.label.toLowerCase()
+        //       .indexOf(query.toLowerCase()) > -1;
+        //   });
+        // }, 200);
+      } else {
+        this.options4 = [];
+      }
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
@@ -288,7 +363,7 @@ export default {
       this.$post('/admin/titleLink/publish',{
           "id": 0,
           "name": this.temp.name,
-          "type": 3,
+          "type": 0,
           "url": this.temp.url
       })
       .then( res => {
@@ -326,8 +401,8 @@ export default {
           console.log(tempData)
           this.$post('/admin/titleLink/publish', {
               "id": tempData.id,
+              "img_url": tempData.img_url,
               "name": tempData.name,
-              "type": 3,
               "url": tempData.url
           })
           .then(res => {
