@@ -55,28 +55,33 @@
 
     <el-dialog title="新增" :visible.sync="dialogFormAdd">
       <el-form :rules="rules" ref="dataFormAdd" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <!-- <el-form-item label="编号" prop="title">
-          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
-          <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item> -->
-        <el-form-item label="平台名称" prop="title">
-          <el-select
+
+        <el-form-item label="图片预览" prop="img">
+          <img :src="value9" style="height:100px;width: 100px;">
+          <div style="background: aqua;">{{value9}}</div>
+        </el-form-item>
+
+        <el-form-item label="平台名称" prop="title" >
+          <el-select 
             v-model="value9"
             :multiple="false"
             :filterable="true"
             :remote="true"
             reserve-keyword
             placeholder="请输入关键词"
+            no-data-text="数据库中无此条消息"
+            change="changeSelection()"
             :remote-method="remoteMethod"
+            ref="select"
             :loading="loading">
             <el-option
               v-for="item in options4"
               :key="item.id"
-              :label="item.path"
+              :label="item.name"
               :value="item.path">
             </el-option>
           </el-select>
-        </el-form-item>
+      </el-form-item>
 
          
 
@@ -105,7 +110,6 @@
 
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
-import waves from '@/directive/waves' // 水波纹指令
 import { parseTime } from '@/utils'
 
 const calendarTypeOptions = [
@@ -123,32 +127,13 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'complexTable',
-  directives: {
-    waves
-  },
   data() {
     return {
+      avatar: '',
       options4: [],
       value9: [],
       ImgList: [],
       loading: false,
-      states: ["Alabama", "Alaska", "Arizona",
-      "Arkansas", "California", "Colorado",
-      "Connecticut", "Delaware", "Florida",
-      "Georgia", "Hawaii", "Idaho", "Illinois",
-      "Indiana", "Iowa", "Kansas", "Kentucky",
-      "Louisiana", "Maine", "Maryland",
-      "Massachusetts", "Michigan", "Minnesota",
-      "Mississippi", "Missouri", "Montana",
-      "Nebraska", "Nevada", "New Hampshire",
-      "New Jersey", "New Mexico", "New York",
-      "North Carolina", "North Dakota", "Ohio",
-      "Oklahoma", "Oregon", "Pennsylvania",
-      "Rhode Island", "South Carolina",
-      "South Dakota", "Tennessee", "Texas",
-      "Utah", "Vermont", "Virginia",
-      "Washington", "West Virginia", "Wisconsin",
-      "Wyoming"],
       backMsg: [],
       tableKey: 0,
       list: null,
@@ -210,8 +195,7 @@ export default {
     }
   },
   created() {
-    
-      // 浮窗配置  /file/upload/image
+    // 浮窗配置  /file/upload/image
      this.$post(`/admin/friendLink/search`, {
       "pageNo": 1,
       "pageSize": 10
@@ -221,34 +205,29 @@ export default {
     })
   },
   methods: {
+    changeSelection: function(val) {
+        console.log('====>',this.$ref.select)
+        console.log(val)
+        this.avatar = val.path;
+    },
     // 新增图片选择
     remoteMethod(query) {
-      
-
       if (query !== '') {
-        this.loading = true;
-        this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=1000&name=${query}`)
-        .then( res => {
-          this.loading = false;
-          this.options4 = res.data.list;
-          console.log(res)
-        })
-        .catch( err => {
-          this.loading = false;
-        })
-
-
-
-        // this.loading = true;
-        // setTimeout(() => {
-        //   this.loading = false;
-        //   this.options4 = this.list.filter(item => {
-        //     return item.label.toLowerCase()
-        //       .indexOf(query.toLowerCase()) > -1;
-        //   });
-        // }, 200);
+          this.loading = true;
+          this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=1000&name=${query}`)
+          .then( res => {
+            this.loading = false;
+            this.options4 = res.data.list;
+            console.log('====>',this.$ref.select)
+            let path=this.$refs.select.selectedLabel
+            this.$refs.select.$el.children[0].children[1].setAttribute('style','background:url('+ path +') no-repeat;color:#fff');
+            console.log(res)
+          })
+          .catch( err => {
+            this.loading = false;
+          })
       } else {
-        this.options4 = [];
+          this.options4 = [];
       }
     },
     getList() {
@@ -322,7 +301,6 @@ export default {
     handleCreate() {
       this.resetTemp()
       this.dialogFormAdd = true
-      console.log(this.temp)
       // this.$nextTick(() => {
       //   this.$refs['dataFormAdd'].validate((valid) => {
           

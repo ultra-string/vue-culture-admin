@@ -29,11 +29,22 @@
 
       <el-table-column align="center" label="上传日期" width="95">
         <template slot-scope="scope">
-          <span>{{scope.row.uploadTime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
+          <span>{{scope.row.uploadTime | parseTime('{y}-{m}-{d}')}}</span>
         </template>
       </el-table-column>
 
     </el-table>
+
+    <el-pagination
+      style="width: 400px;margin:30px auto;"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage"
+      :page-size="pageList.pageSize"
+      :background="true"
+      layout="total, prev, pager, next"
+      :page-count="Number(pageList.pages)">
+    </el-pagination>
 
     <!-- 添加文件模态框 -->
     <el-dialog title="信息" :visible.sync="dialogFormVisible">
@@ -45,10 +56,9 @@
           </form>
 
           <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="submitForm($event)">确 定</el-button>
-            </div>
-      
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="submitForm($event)">确 定</el-button>
+          </div>
     </el-dialog>
 
 </div>
@@ -69,6 +79,8 @@ export default {
   },
   data() {
     return {
+      pageList: {},
+      currentPage: 1,
       userFileName: '',
       searchInput: '',
       fileList: [],
@@ -109,6 +121,13 @@ export default {
     this.getList()
   },
   methods: {
+    // 分页
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      this.getList()
+    },
     getFile(event) {
       this.mediaForm.file = event.target.files[0];
       console.log(this.mediaForm.file);
@@ -116,8 +135,20 @@ export default {
     submitForm(event) {
       event.preventDefault();
       let formData = new FormData();
-      formData.append('fileName', this.mediaForm.fileName);
+      formData.append('fileName', this.mediaForm.name);
       formData.append('file', this.mediaForm.file);
+
+      let data = {
+        covertPath: '',
+        id: 0,
+        isDelete: false,
+        name: this.mediaForm.name,
+        path: '',
+        size: '',
+        type: '',
+        uploadTime: `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`,
+        userId: 0
+      }
 
       const server = axios.create({
         baseURL: baseUrl,
@@ -127,8 +158,10 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       });
+
       server.post('/admin/file/upload/image', formData)
       .then(res => {
+        this.list.unshift(data);
         this.dialogFormVisible = false
       })
       .catch( err => {
@@ -139,8 +172,9 @@ export default {
       })
     },
     getList() {
-      this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=100`)
+      this.$get(`/admin/file/image?type=0&pageNo=${this.currentPage}&pageSize=10`)
       .then( res => {
+        this.pageList = res.data;
         this.list = res.data.list
         console.log(res)
       })
@@ -149,8 +183,9 @@ export default {
       })
     },
     searchList() {
-      this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=100&name=${this.userFileName}`)
+      this.$get(`/admin/file/image?type=0&pageNo=1&pageSize=1000&name=${this.userFileName}`)
       .then( res => {
+        this.pageList = res.data;
         this.list = res.data.list
         console.log(res)
       })
