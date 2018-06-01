@@ -48,6 +48,8 @@ import Information from '@/views/am-content/Information'
 import ImageCenter from '@/views/am-images/ImageCenter'
 /* 手艺网用户管理系统 */ 
 import UserInfo from '@/views/am-user/UserInfo'
+/* 手艺网用户密码系统 */ 
+import UserPassWordInfo from '@/views/am-user/UserPassWordInfo'
 /* 手艺网富文本编辑器 */
 import Ueditor from '@/views/am-content/addver'
 
@@ -351,6 +353,21 @@ export const constantRouterMap = [
       }
     }]
   },
+  // 个人密码修改   UserPassWordInfo
+  {
+    path: '/userPassWordInfo',
+    component: Layout,
+    redirect: '/userPassWordInfo/index',
+    children: [{
+      path: 'index',
+      component: UserInfo,
+      name: 'userPassWordInfo',
+      meta: {
+        title: '密码安全',
+        icon: 'excel'
+      }
+    }]
+  },
   // 富文本编辑器 Ueditor
   {
       path: '/addver',
@@ -380,8 +397,6 @@ const router =  new Router({
 
 // 判断登陆的导航钩子
 router.beforeEach((to, from, next) => {
-  console.log(to.fullPath)
-  // next()
   if($store.state.user.token != '' || to.path == '/login') {
     next()
   }else {

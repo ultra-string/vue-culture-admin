@@ -29,45 +29,45 @@
 
           <el-row  style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">标题</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.bodyTitle" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.bodyTitle" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row  style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">作者：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.author" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.author" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row  style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">摘要：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.summary" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.summary" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">关键词：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.keyword" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.keyword" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">缩略图：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
           </el-row>
          
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">列表图：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">主视图：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
           </el-row>
           
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">视频：</div></el-col>
-              <el-col :span="10"><el-input class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="6"><el-input class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
           </el-row>
 
@@ -493,7 +493,7 @@
               });
           })
         })
-        .then(err => {
+        .catch(err => {
             this.$notify.error({
               title: '错误',
               message: err

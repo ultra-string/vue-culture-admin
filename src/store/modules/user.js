@@ -19,6 +19,9 @@ const user = {
   },
 
   mutations: {
+    AM_STORE_USER_INFO: (state, res) => {
+      state.userInfo = res;
+    },
     SET_CODE: (state, code) => {
       state.code = code
     },
@@ -52,6 +55,10 @@ const user = {
   },
 
   actions: {
+    // 官网保存用户信息
+    AmStoreUserInfo({commit}, res) {
+      commit('AM_STORE_USER_INFO', res);
+    },
     // 保存token
     StoreToken({commit}, res) {
       commit('SET_TOKEN', res);

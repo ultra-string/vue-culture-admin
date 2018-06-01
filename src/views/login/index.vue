@@ -116,11 +116,22 @@ export default {
         this.$store.dispatch('StoreToken', res.data);
         this.$get('/admin/user')
         .then(res => {
-          this.$store.dispatch('StoreUser', res.data);
-          this.$router.push({path: '/'});
+          if(res.code == '000000') {
+              this.$store.dispatch('StoreUser', res.data);
+              this.$router.push({path: '/'});
+          }else {
+            this.$notify.error({
+              title: '错误',
+              message: res.msg
+            });
+          }
+          
         })
         .catch( err => {
-          this.$router.push({path: '/'});
+            this.$notify.error({
+              title: '错误',
+              message: err
+            });
         })
       })
       .catch(err => {
