@@ -174,7 +174,7 @@ export default {
       })
     },
     getList() {
-      this.$get(`/admin/file/image?type=1&pageNo=1&pageSize=100`)
+      this.$get(`/admin/file/image?type=1&pageNo=${this.currentPage}&pageSize=10`)
       .then( res => {
         this.pageList = res.data;
         this.list = res.data.list
@@ -185,7 +185,7 @@ export default {
       })
     },
     searchList() {
-      this.$get(`/admin/file/image?type=1&pageNo=1&pageSize=100&name=${this.userFileName}`)
+      this.$get(`/admin/file/image?type=1&pageNo=1&pageSize=1000&name=${this.userFileName}`)
       .then( res => {
         this.pageList = res.data;
         this.list = res.data.list
