@@ -50,12 +50,14 @@ import ImageCenter from '@/views/am-images/ImageCenter'
 import UserInfo from '@/views/am-user/UserInfo'
 /* 手艺网用户密码系统 */ 
 import UserPassWordInfo from '@/views/am-user/UserPassWordInfo'
+/* 访问统计 */
+import AllGuide from '@/views/am-recode/allGuide'
+import ArticleGuide from '@/views/am-recode/articleGuide'
+import NavGuide from '@/views/am-recode/navGuide'
 /* 手艺网富文本编辑器 */
 import Ueditor from '@/views/am-content/addver'
 
-/** note: submenu only apppear when children.length>=1
-*   detail see  https://panjiachen.github.io/vue-element-admin-site/#/router-and-nav?id=sidebar
-**/
+
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -188,6 +190,49 @@ export const constantRouterMap = [
   //   }]
   // },
   // 手艺网添加的路由
+  // 访问统计模块
+  {
+    path: '/allGuide',
+    component: Layout,
+    redirect: '/allGuide/index',
+    children: [{
+      path: 'index',
+      component: AllGuide,
+      name: 'allGuide',
+      meta: {
+        title: '总访问量',
+        icon: 'excel'
+      }
+    }]
+  },
+  {
+    path: '/articleGuide',
+    component: Layout,
+    redirect: '/articleGuide/index',
+    children: [{
+      path: 'index',
+      component: ArticleGuide,
+      name: 'articleGuide',
+      meta: {
+        title: '文章访问量',
+        icon: 'excel'
+      }
+    }]
+  },
+  {
+    path: '/navGuide',
+    component: Layout,
+    redirect: '/navGuide/index',
+    children: [{
+      path: 'index',
+      component: NavGuide,
+      name: 'navGuide',
+      meta: {
+        title: '菜单访问量',
+        icon: 'excel'
+      }
+    }]
+  },
   // 目录结构
   {
     path: '/structure',
@@ -360,7 +405,7 @@ export const constantRouterMap = [
     redirect: '/userPassWordInfo/index',
     children: [{
       path: 'index',
-      component: UserInfo,
+      component: UserPassWordInfo,
       name: 'userPassWordInfo',
       meta: {
         title: '密码安全',

@@ -36,12 +36,12 @@
         <el-menu-item class="fl" index="/userModule/fountuser">用户管理系统</el-menu-item>
       </router-link>
       <router-link to="/mediaModule/allImg">
-        <el-menu-item class="fl" index="/mediaModule/allImg">图片管理系统</el-menu-item>
+        <el-menu-item class="fl" index="/mediaModule/allImg">文件管理系统</el-menu-item>
       </router-link>
       <el-dropdown class="avatar-container right-menu-item fl" trigger="click">
         <div class="avatar-wrapper clearfix">
-          <img class="user-avatar" src="~@/assets/logo.png">
-          <div>主管理员</div>
+          <img v-if="userInfo.headUrl" class="user-avatar" :src="userInfo.headUrl">
+          <div>{{userInfo.username}}</div>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -49,14 +49,14 @@
             <el-dropdown-item>
               基本资料
             </el-dropdown-item>
-          </router-link>
-          <a target='_blank' href="">
+          </router-link>  
+          <router-link to="/userPassWordInfo/index">
             <el-dropdown-item>
               安全设置
             </el-dropdown-item>
-          </a>
+          </router-link>
           <el-dropdown-item divided>
-            <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
+            <span @click="logout" style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -86,7 +86,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'name',
-      'avatar'
+      'avatar',
+      'userInfo'
     ])
   },
   methods: {

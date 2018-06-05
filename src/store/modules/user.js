@@ -5,6 +5,7 @@ const user = {
   state: {
     user: '',
     userInfo: {},
+    rootAdmin: false,
     status: '',
     code: '',
     // token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUyODAxNjM2NCwiaWF0IjoxNTI3NDExNTY0fQ.zBKT8gw2AfO1CV33TzyXVWOAyeu4B535bHqSTfzKHbShHVQ-zDcivgTPHulM-RKGJA7i_vNNwZ2htnDfdw4Ngw',
@@ -21,6 +22,12 @@ const user = {
   mutations: {
     AM_STORE_USER_INFO: (state, res) => {
       state.userInfo = res;
+      console.log('====>',res)
+      if(res.authorities.length > 1) {
+        state.rootAdmin = true;
+      }else {
+        state.rootAdmin = false;
+      }
     },
     SET_CODE: (state, code) => {
       state.code = code

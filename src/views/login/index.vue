@@ -3,7 +3,6 @@
     <el-form class="login-form" autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left">
       <div class="title-container">
         <h3 class="title">中国手艺网后台管理系统</h3>
-        <!-- <lang-select class="set-language"></lang-select> -->
       </div>
       <el-form-item prop="username">
         <span class="svg-container svg-container_login">
@@ -31,7 +30,7 @@
         </span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">立即登录</el-button>
 
       <!-- <div class="tips">
         <span>{{$t('login.username')}} : admin</span>
@@ -65,20 +64,6 @@ export default {
   components: {  SocialSign },
   name: 'login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 4) {
-        callback(new Error('The password can not be less than 4 digits'))
-      } else {
-        callback()
-      }
-    }
     return {
       smsSend: false,
       smscodeImg: `http://118.190.152.1:8084/imageVali/`,
@@ -88,8 +73,14 @@ export default {
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 15, message: '长度在 3 到 15个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 3, max: 15, message: '长度在 3 到 15个字符', trigger: 'blur' }
+        ]
       },
       passwordType: 'password',
       loading: false,
@@ -113,44 +104,41 @@ export default {
       this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim(),code: this.loginForm.smscode})
       .then(res => {
         console.log(res.data)
-        this.$store.dispatch('StoreToken', res.data);
-        this.$get('/admin/user')
-        .then(res => {
-          if(res.code == '000000') {
-              this.$store.dispatch('StoreUser', res.data);
-              this.$router.push({path: '/'});
-          }else {
+        if(res.code == '000000') {
+            this.$store.dispatch('StoreToken', res.data);
+            this.$get('/admin/user')
+            .then(res => {
+              if(res.code == '000000') {
+                  this.$store.commit('AM_STORE_USER_INFO', res.data);
+                  this.$router.push({path: '/'});
+              }else {
+                this.$notify.error({
+                  title: '登录错误',
+                  message: res.msg
+                });
+              }
+              
+            })
+            .catch( err => {
+                this.$notify.error({
+                  title: '错误',
+                  message: err
+                });
+            })
+        }else {
             this.$notify.error({
-              title: '错误',
+              title: '登录错误',
               message: res.msg
             });
-          }
-          
-        })
-        .catch( err => {
-            this.$notify.error({
-              title: '错误',
-              message: err
-            });
-        })
+        }
+        
       })
       .catch(err => {
-        console.log(err);
+          this.$notify.error({
+            title: '登录错误',
+            message: '账号或密码错误'
+          });
       })
-      // this.$refs.loginForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-      //       this.loading = false
-      //       this.$router.push({ path: '/' })
-      //     }).catch(() => {
-      //       this.loading = false
-      //     })
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
     },
     afterQRScan() {
       // const hash = window.location.hash.slice(1)

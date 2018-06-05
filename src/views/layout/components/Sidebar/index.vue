@@ -27,7 +27,7 @@
         <!-- 栏目管理 -->
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-menu"></i>
             <span>栏目管理</span>
           </template>
           <el-menu-item-group>
@@ -41,7 +41,7 @@
         <!-- 内容管理 -->
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-document"></i>
             <span>内容管理</span>
           </template>
           <el-menu-item-group>
@@ -55,13 +55,13 @@
         <!-- 访问统计 -->
         <el-submenu index="4">
           <template slot="title">
-            <i class="el-icon-location"></i>
+            <i class="el-icon-setting"></i>
             <span>访问统计</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="4-1">访问总量</el-menu-item>
-            <el-menu-item index="4-2">菜单访问量</el-menu-item>
-            <el-menu-item index="4-3">文章访问量</el-menu-item>
+            <el-menu-item index="/allGuide/index">访问总量</el-menu-item>
+            <el-menu-item index="/navGuide/index">菜单访问量</el-menu-item>
+            <el-menu-item index="/articleGuide/index">文章访问量</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
       </el-menu>

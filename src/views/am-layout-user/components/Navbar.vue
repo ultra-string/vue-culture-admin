@@ -40,8 +40,8 @@
       </router-link>
       <el-dropdown class="avatar-container right-menu-item fl" trigger="click">
         <div class="avatar-wrapper clearfix">
-          <img class="user-avatar" src="~@/assets/logo.png">
-          <div>主管理员</div>
+          <img v-if="userInfo.headUrl" class="user-avatar" :src="userInfo.headUrl">
+          <div>{{userInfo.username}}</div>
           <i class="el-icon-caret-bottom"></i>
         </div>
         <el-dropdown-menu slot="dropdown">
@@ -50,11 +50,11 @@
               基本资料
             </el-dropdown-item>
           </router-link>
-          <a target='_blank' href="">
+          <router-link to="/userPassWordInfo/index">
             <el-dropdown-item>
               安全设置
             </el-dropdown-item>
-          </a>
+          </router-link>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
@@ -86,7 +86,8 @@ export default {
     ...mapGetters([
       'sidebar',
       'name',
-      'avatar'
+      'avatar',
+      'userInfo'
     ])
   },
   methods: {

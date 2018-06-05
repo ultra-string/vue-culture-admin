@@ -26,12 +26,12 @@
           <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" align="center" label="状态">
+      <!-- <el-table-column min-width="150px" align="center" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.status == 0">下架</span>
           <span v-else-if="scope.row.status == 1">上架</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -41,12 +41,23 @@
       </el-table-column>
     </el-table>
 
+    <el-pagination
+      style="width: 400px;margin:30px auto;"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage"
+      :page-size="10"
+      :background="true"
+      layout="total, prev, pager, next"
+      :total="pageList.total"
+      :page-count="pageList.pages">
+    </el-pagination>
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="编号" prop="title">
+        <!-- <el-form-item label="编号" prop="title">
           <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
           <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="平台名称" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
@@ -55,18 +66,18 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{$t('table.cancel')}}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{$t('table.confirm')}}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{$t('table.confirm')}}</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">确定</el-button>
+        <el-button v-else type="primary" @click="updateData">确定</el-button>
       </div>
     </el-dialog>
 
     <el-dialog title="新增" :visible.sync="dialogFormAdd">
       <el-form :rules="rules" ref="dataFormAdd" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <el-form-item label="编号" prop="title">
+        <!-- <el-form-item label="编号" prop="title">
           <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
           <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="平台名称" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
@@ -86,7 +97,7 @@
         <el-table-column prop="pv" label="Pv"> </el-table-column>
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">{{$t('table.confirm')}}</el-button>
+        <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
       </span>
     </el-dialog>
 
@@ -124,6 +135,11 @@ export default {
   },
   data() {
     return {
+      pageList: {
+
+      },
+      currentPage: 1,
+
       backMsg: [],
       tableKey: 0,
       list: null,
@@ -188,14 +204,27 @@ export default {
       // 浮窗配置  /file/upload/image
      this.$post(`/admin/titleLink/search`, {
       type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
-      pageNo: 1,  // 页数 
-      pageSize: 100   // 请求多少条
+      pageNo: this.currentPage,  // 页数 
+      pageSize: 10   // 请求多少条
     })
     .then( res => {
+        this.pageList = res.data;
         this.backMsg = res.data.list;
     })
   },
   methods: {
+    handleCurrentChange(val) {
+      this.viewOptions.pageNo = val;
+      this.$post(`/admin/titleLink/search`, {
+        type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+        pageNo: this.currentPage,  // 页数 
+        pageSize: 10   // 请求多少条
+      })
+      .then( res => {
+          this.pageList = res.data;
+          this.backMsg = res.data.list;
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
@@ -208,14 +237,6 @@ export default {
     },
     handleFilter() {
       this.listQuery.page = 1
-      this.getList()
-    },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
       this.getList()
     },
     handleModifyStatus(row, status) {
@@ -234,7 +255,15 @@ export default {
                 this.backMsg = this.backMsg.filter(function(v){
                   return row.id !== v.id;
                 });
-                console.log(this.backMsg)
+                this.$post(`/admin/titleLink/search`, {
+                  type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+                  pageNo: this.currentPage,  // 页数 
+                  pageSize: 10   // 请求多少条
+                })
+                .then( res => {
+                    this.pageList = res.data;
+                    this.backMsg = res.data.list;
+                })
                 this.$message({
                   message: '操作成功',
                   type: 'success'
@@ -315,7 +344,18 @@ export default {
           let o = new Date();
           this.temp.updateTime = `${o.getFullYear()}-${o.getMonth()+1}-${o.getDate()}`
           this.backMsg.push(this.temp);
-          this.dialogFormAdd = false
+          this.dialogFormAdd = false;
+
+          this.$post(`/admin/titleLink/search`, {
+            type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+            pageNo: this.currentPage,  // 页数 
+            pageSize: 10   // 请求多少条
+          })
+          .then( res => {
+              this.pageList = res.data;
+              this.backMsg = res.data.list;
+          })
+
           this.$notify({
             title: '成功',
             message: '更新成功',
@@ -358,7 +398,18 @@ export default {
                   break
                 }
               }
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
+
+              this.$post(`/admin/titleLink/search`, {
+                type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+                pageNo: this.currentPage,  // 页数 
+                pageSize: 10   // 请求多少条
+              })
+              .then( res => {
+                  this.pageList = res.data;
+                  this.backMsg = res.data.list;
+              })
+
               this.$notify({
                 title: '成功',
                 message: '更新成功',

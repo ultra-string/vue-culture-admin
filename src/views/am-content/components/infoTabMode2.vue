@@ -37,6 +37,17 @@
       </el-table-column>
     </el-table>
 
+    <el-pagination
+      style="width: 400px;margin:30px auto;"
+      @current-change="handleCurrentChange"
+      :current-page.sync="currentPage"
+      :page-size="10"
+      :background="true"
+      layout="total, prev, pager, next"
+      :total="pageList.total"
+      :page-count="pageList.pages">
+    </el-pagination>
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
         <el-form-item label="" prop="title">
@@ -58,7 +69,6 @@
 
         <el-form-item label="图片预览" prop="img">
           <img :src="value9" style="height:100px;width: 100px;">
-          <div style="background: aqua;">{{value9}}</div>
         </el-form-item>
 
         <el-form-item label="平台名称" prop="title" >
@@ -129,6 +139,11 @@ export default {
   name: 'complexTable',
   data() {
     return {
+      pageList: {
+
+      },
+      currentPage: 1,
+
       avatar: '',
       options4: [],
       value9: [],
@@ -197,14 +212,30 @@ export default {
   created() {
     // 浮窗配置  /file/upload/image
      this.$post(`/admin/friendLink/search`, {
-      "pageNo": 1,
+      "pageNo": this.currentPage,
       "pageSize": 10
     })
     .then( res => {
+        this.pageList = res.data;
         this.backMsg = res.data.list;
     })
   },
   methods: {
+    handleCurrentChange(val) {
+        
+        this.currentPage = val;
+        this.$post(`/admin/friendLink/search`, {
+        "pageNo": this.currentPage,
+        "pageSize": 10
+      })
+      .then( res => {
+          this.pageList = res.data;
+          this.backMsg = res.data.list;
+      })
+      .catch( err => {
+      })
+    },
+
     changeSelection: function(val) {
         console.log('====>',this.$ref.select)
         console.log(val)
@@ -244,14 +275,6 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
-    },
     handleModifyStatus(row, status) {
 
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -268,7 +291,14 @@ export default {
                 this.backMsg = this.backMsg.filter(function(v){
                   return row.id !== v.id;
                 });
-                console.log(this.backMsg)
+                 this.$post(`/admin/friendLink/search`, {
+                  "pageNo": this.currentPage,
+                  "pageSize": 10
+                })
+                .then( res => {
+                    this.pageList = res.data;
+                    this.backMsg = res.data.list;
+                })
                 this.$message({
                   message: '操作成功',
                   type: 'success'
@@ -348,7 +378,18 @@ export default {
           let o = new Date();
           this.temp.updateTime = `${o.getFullYear()}-${o.getMonth()+1}-${o.getDate()}`
           this.backMsg.push(this.temp);
-          this.dialogFormAdd = false
+          this.dialogFormAdd = false;
+
+           this.$post(`/admin/friendLink/search`, {
+            "pageNo": this.currentPage,
+            "pageSize": 10
+          })
+          .then( res => {
+              this.pageList = res.data;
+              this.backMsg = res.data.list;
+          })
+
+
           this.$notify({
             title: '成功',
             message: '更新成功',
@@ -391,7 +432,18 @@ export default {
                   break
                 }
               }
-              this.dialogFormVisible = false
+              this.dialogFormVisible = false;
+
+               this.$post(`/admin/friendLink/search`, {
+                  "pageNo": this.currentPage,
+                  "pageSize": 10
+                })
+                .then( res => {
+                    this.pageList = res.data;
+                    this.backMsg = res.data.list;
+                })
+
+
               this.$notify({
                 title: '成功',
                 message: '更新成功',

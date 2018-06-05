@@ -16,7 +16,7 @@ import { baseUrl } from '@/config/env'
 // axios.defaults.baseURL = baseUrl
 
 const server = axios.create({
-  baseURL: '/apis',
+  baseURL: baseUrl,
   timeout: 10000,
   // headers: {'Content-Type': 'Content-Type: application/json'}
   // headers: {

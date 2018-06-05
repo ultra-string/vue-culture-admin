@@ -1,5 +1,6 @@
 const getters = {
   userInfo: state => state.user.userInfo,
+  rootAdmin: state => state.user.rootAdmin,
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
   device: state => state.app.device,

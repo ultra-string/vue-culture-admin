@@ -2,7 +2,7 @@
 
 <div>
   <el-row :gutter="20" style="margin: 30px 0">
-        <!-- <el-col :span="6">
+        <el-col :span="6">
           <el-row :gutter="5">
             <el-col :span="8">
               <div class="searchTitle">状态：</div>
@@ -18,7 +18,7 @@
               </el-select>
             </el-col>
           </el-row>
-        </el-col> -->
+        </el-col>
 
         <el-col :span="18">
           <el-row :gutter="10">
@@ -29,7 +29,7 @@
               <el-button type="primary" @click="searchName">搜索</el-button>
             </el-col>
             <el-col :span="8" v-if="type.userType == 1">
-              <el-button :disabled="!rootAdmin" type="warning" @click="addUser">添加</el-button>
+              <el-button type="warning" @click="addUser">添加</el-button>
             </el-col>
           </el-row>
         </el-col>
@@ -108,48 +108,26 @@
       </template>
     </el-table-column>
 
-    <el-table-column align="center" label="操作" width="95"  v-if="type.userType == 1">
+    <el-table-column align="center" label="操作" width="95">
       <template slot-scope="scope">
         <el-button type="danger" @click="delUser(scope.row)">删除</el-button>
       </template>
     </el-table-column>
 
   </el-table>
-
-    <el-pagination
-      style="width: 400px;margin:30px auto;"
-      @current-change="handleCurrentChange"
-      :current-page.sync="this.viewOptions.pageNo"
-      :page-size="10"
-      :background="true"
-      layout="total, prev, pager, next"
-      :total="pageList.total"
-      :page-count="pageList.pages">
-    </el-pagination>
-
 </div>
   
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import { fetchList } from '@/api/article'
 
 export default {
   props: {
     type: Object
   },
-  computed: {
-    ...mapGetters([
-      'rootAdmin'
-    ]),
-  },
   data() {
     return {
-      pageList: {
-
-      },
-      
       options4: [],
       value9: '',
       loading: false,
@@ -165,8 +143,8 @@ export default {
       ],
       stausValue: '在用',
       viewOptions: {
-          "pageNo": 1,
-          "pageSize": 10,
+          "pageNo": 0,
+          "pageSize": 0,
           "status": 1,
           "userType": 0,
           "username": ""
@@ -201,16 +179,13 @@ export default {
     }
   },
   created() {
+    console.log(this.type.userType)
     this.viewOptions.userType = this.type.userType;
     this.getList()
   },
   methods: {
-    handleCurrentChange(val) {
-        this.viewOptions.pageNo = val;
-        this.getList();
-    },
     searchName() {
-      this.getList();
+      this.getList()
     },
     addUser() {
         this.dialogFormVisible = true;
@@ -243,7 +218,6 @@ export default {
               })
           }
           this.dialogFormVisible = false;
-          this.getList();
       })
       .catch( err => {
           this.$message({
@@ -259,12 +233,13 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-            this.$get(`/admin/del?id=${userInfo.id}`)
+            this.$post('/admin/del', {
+                "id": userInfo.id
+              })
               .then(res => {
                 this.list = this.list.filter(function(v){
-                  return userInfo.id !== v.id;
+                  return userInfo.titleId !== v.titleId;
                 });
-                this.getList()
                 this.$message({
                   message: '操作成功',
                   type: 'success'
@@ -306,7 +281,6 @@ export default {
       
       this.$post('/admin/user/userListSearch', this.viewOptions)
       .then( res => {
-          this.pageList = res.data;
           this.list = res.data.list;
           this.loading = false;
       })

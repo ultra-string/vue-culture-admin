@@ -40,10 +40,11 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page.sync="currentPage"
-      :page-size="pageList.pageSize"
+      :page-size="10"
       :background="true"
       layout="total, prev, pager, next"
-      :page-count="Number(pageList.pages)">
+      :total="pageList.total"
+      :page-count="pageList.pages">
     </el-pagination>
 
     <!-- 添加文件模态框 -->
@@ -127,6 +128,7 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
+      this.currentPage = val;
       this.getList()
     },
     getFile(event) {
@@ -164,7 +166,14 @@ export default {
       .then(res => {
         // this.pageList = res.data;
         this.list.unshift(data);
-        this.dialogFormVisible = false
+        this.dialogFormVisible = false;
+
+        this.getList()
+
+        this.$message({
+          message: '操作成功',
+          type: 'success'
+        })
       })
       .catch( err => {
         this.$message({

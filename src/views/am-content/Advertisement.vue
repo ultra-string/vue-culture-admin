@@ -2,9 +2,9 @@
   <div class="tab-container">
     <el-tabs style='margin-top:15px;' v-model="activeName" type="border-card">
       <el-tab-pane v-for="item in tabMapOptions" :label="item.label" :key='item.key' :name="item.key">
-        <keep-alive>
+        <!-- <keep-alive> -->
           <tab-pane v-if='activeName==item.key' :type='item.type' @create='showCreatedTimes'></tab-pane>
-        </keep-alive>
+        <!-- </keep-alive> -->
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -20,7 +20,7 @@ export default {
     return {
       tabMapOptions: [
         { label: '广告首页', key: 'CN', type: 2 },
-        { label: '专题策划首页', key: 'US', type: 7 }
+        { label: '专题策划广告', key: 'US', type: 7 }
       ],
       activeName: 'CN',
       createdTimes: 0

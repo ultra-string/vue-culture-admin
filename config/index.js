@@ -14,11 +14,11 @@ module.exports = {
     // 代理设置
     proxyTable: {
         '/apis': {  //将www.exaple.com印射为/apis
-          target: 'http://118.190.152.1:8081', // 接口域名
+          target: 'http://118.190.152.1:8800', // 接口域名
           changeOrigin: true, //是否跨域
           pathRewrite: {
             '^/apis': ''  //需要rewrite的,
-          }       
+          }
         }
     },
 

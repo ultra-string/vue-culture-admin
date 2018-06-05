@@ -49,26 +49,26 @@
 
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">缩略图：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
-              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning" @click="SearchMedia('smallImg')">查询</el-button></el-col>
           </el-row>
          
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">列表图：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
-              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning" @click="SearchMedia('listImg')">查询</el-button></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">主视图：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
-              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning" @click="SearchMedia('mainImg')">查询</el-button></el-col>
           </el-row>
           
           <el-row style="marginTop:10px;">
               <el-col :span="2"><div class="searchTitle">视频：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
-              <el-col :span="2"><el-button type="warning">查询</el-button></el-col>
+              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="2"><el-button type="warning" @click="SearchMedia('video')">查询</el-button></el-col>
           </el-row>
 
         <div style="margin: 30px 0;">
@@ -81,31 +81,127 @@
     </div>
 
 
-    <div v-show="opacityStyle">
-        <el-row :gutter="20"  style="marginTop:10px;">
-          <!-- <el-col :span="6" class="clearfix">
-            <div class="searchTitle fl">一级标题</div>
-            <el-select class="fl" v-model="oneIdValue" placeholder="请选择" @change="oneIdChange">
-              <el-option
-                v-for="item in oneIdOptions"
-                :key="item.id"
-                :label="item.titleName"
-                :value="item.titleName">
-              </el-option>
-            </el-select>
-          </el-col>
+    <!-- 图片搜索弹窗 -->
+    <el-dialog title="新增" :visible.sync="mediaSearchDialog">
+      <el-form ref="mediaSearch" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
 
-          <el-col :span="6" class="clearfix">
-            <div class="searchTitle fl">二级标题</div>
-            <el-select class="fl" v-model="twoIdValue" placeholder="请选择" @change="twoIdChange">
+        <el-form-item label="预览" prop="img">
+          <div v-if="mediaType == '/image'">
+            <img v-show="mediaSearchValue" :src="mediaSearchValue" style="height:100px;width: 100px;">
+          </div>
+          <div v-else>
+            <cm-video-player
+                v-if="mediaSearchValue"
+                :src="mediaSearchValue"
+                :width="'200px'"
+                :height="'200px'"
+            ></cm-video-player>
+          </div>
+        </el-form-item>
+
+        <el-form-item label="平台名称" prop="title" >
+            <el-select 
+              v-model="mediaSearchValue"
+              :multiple="false"
+              :filterable="true"
+              :remote="true"
+              reserve-keyword
+              placeholder="请输入关键词"
+              no-data-text="数据库中无此条消息"
+              :remote-method="remoteMethod"
+              ref="select"
+              :loading="loading">
               <el-option
-                v-for="item in twoIdOptions"
+                v-for="item in options4"
                 :key="item.id"
-                :label="item.titleName"
-                :value="item.titleName">
+                :label="item.name"
+                :value="item.path">
               </el-option>
             </el-select>
-          </el-col> -->
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="mediaSearchDialog = false">取消</el-button>
+        <el-button type="primary" @click="mediaSearchSuccess">确定</el-button>
+      </div>
+    </el-dialog>
+     
+
+
+    <div v-show="opacityStyle">
+
+        <div>
+
+            <div class="clearfix marginT">
+                <div class="clearfix fl marginL">
+                     <div class="searchTitle fl">作者：</div>
+                      <div class="fl search-input">
+                        <el-input v-model="searchOptions.author" placeholder="请输入内容"></el-input>
+                      </div>
+                </div>
+
+                <div class="clearfix fl marginL">
+                    <div class="searchTitle fl">关键词：</div>
+                    <div class="fl search-input">
+                        <el-input class="fl search-input" v-model="searchOptions.keywords" placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+
+                <div class="clearfix fl marginL">
+                    <div class="searchTitle fl">标题</div>
+                    <div class="fl search-input">
+                      <el-input v-model="searchOptions.bodyTitle" placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clearfix marginT">
+                <div class="clearfix fl marginL">
+                    <div class="searchTitle fl">开始时间：</div>
+                    <el-date-picker
+                      class="fl search-input"
+                      v-model="searchOptions.startTime"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      type="date"
+                      placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+
+                <div class="clearfix fl marginL">
+                    <div class="searchTitle fl">结束时间：</div>
+                    <el-date-picker
+                      class="fl search-input"
+                      v-model="searchOptions.endTime"
+                      type="date"
+                      value-format="yyyy-MM-dd HH:mm:ss"
+                      placeholder="选择日期">
+                    </el-date-picker>
+                </div>
+
+                <div class="clearfix fl marginL">
+                    <div class="searchTitle fl">状态：</div>
+                    <el-select class="fl search-input" v-model="stausValue" placeholder="" @change="statusChange">
+                      <el-option
+                        v-for="item in stausOptions"
+                        :key="item.status"
+                        :label="item.label"
+                        :value="item.label">
+                      </el-option>
+                    </el-select>
+                </div>
+            </div>
+
+            <div  class="clearfix marginT">
+                <el-button class="marginL" type="primary" @click="hangleSearch">查找</el-button>
+                <el-button type="warning" @click="handleCreate({}, 'add')">添加文章</el-button>
+            </div>
+
+
+      </div>
+
+
+        <!-- <el-row :gutter="20"  style="marginTop:10px;">
 
           <el-col :span="6">
             <el-row>
@@ -178,7 +274,7 @@
             </el-row>
           </el-col>
 
-        </el-row>
+        </el-row> -->
 
 
         <el-table :key='tableKey' :data="this.backMsg"  border fit highlight-current-row
@@ -221,31 +317,46 @@
     </div>
 
       <!-- 分页 -->
-      <!-- <div style="margin:10px auto">
-        <el-pagination
-          
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page.sync="viewOptions.pageNo"
-          :page-size="10"
-          layout="total, prev, pager, next"
-          :total="100">
-        </el-pagination>
-      </div> -->
+      <el-pagination
+        style="width: 400px;margin:30px auto;"
+        @current-change="handleCurrentChange"
+        :current-page.sync="this.viewOptions.pageNo"
+        :page-size="10"
+        :background="true"
+        layout="total, prev, pager, next"
+        :total="pageList.total"
+        :page-count="pageList.pages">
+      </el-pagination>
   </div>
 </template>
 
 <script>
   import UEditor from '@/components/ueditor/ueditor.vue'
+  import CmVideoPlayer from '@/components/am-video/cm-video'
 
   export default{
       name: 'addver',
-      components: {UEditor},
+      components: {
+        UEditor,
+        CmVideoPlayer
+      },
       props: {
         info: Object
       },
       data(){
         return {
+          pageList: {
+
+          },
+	 // 媒体搜索
+          options4: [],
+          mediaSearchDialog: false,
+          mediaSearchValue: '',
+          loading: false,
+          mediaSearchUrl: '',
+          mediaType: '/image',
+          _mediaOutput: 'smallImg',
+
           infoUpdate: false,
           currentPage1: true,
           input: '',
@@ -274,7 +385,7 @@
             "keywords": "",
             "oneId": "",
             "pageNo": 1,
-            "pageSize": 100,
+            "pageSize": 1000,
             "startTime": "",
             "status": 1,
             "twoId": ""
@@ -402,8 +513,8 @@
                 'fontfamily', //字体
                 'fontsize', //字号
                 'paragraph', //段落格式
-                'simpleupload', //单图上传
-                // 'insertimage', //多图上传
+                // 'simpleupload', //单图上传
+                'insertimage', //多图上传
                 // 'edittable', //表格属性
                 // 'edittd', //单元格属性
                 'link', //超链接
@@ -509,6 +620,93 @@
         this.changeViewTab();
       },
       methods: {
+        handleCurrentChange(val) {
+          this.viewOptions.pageNo = val;
+          this.changeViewTab()
+        },
+	// 图片搜索
+        SearchMedia: function(type) {
+          // 清除数据
+          this.options4 = [];
+          this.mediaSearchValue = '';
+          if(type != 'video') {
+              this.mediaType = '/image';
+          }else {
+              this.mediaType = '/video';
+          }
+          // 设置反选属性    _mediaOutput
+          switch(type) {
+            case 'smallImg':
+              this._mediaOutput = 'smallImg';
+              break;
+            case 'listImg':
+              this._mediaOutput = 'listImg';
+              break;
+            case 'mainImg':
+              this._mediaOutput = 'mainImg';
+              break;
+            case 'video':
+              this._mediaOutput = 'video';
+              break;
+          }
+
+          // 开弹窗
+          this.mediaSearchDialog = true;
+        },
+
+	remoteMethod(query) {
+          if (query !== '') {
+              this.loading = true;
+              this.$get(`/admin/file${this.mediaType}?type=0&pageNo=1&pageSize=10&name=${query}`)
+              .then( res => {
+                this.loading = false;
+                this.pageList = res.data;
+                this.options4 = res.data.list;
+                console.log('====>',this.$ref.select)
+                let path=this.$refs.select.selectedLabel
+                this.$refs.select.$el.children[0].children[1].setAttribute('style','background:url('+ path +') no-repeat;color:#fff');
+                console.log(res)
+              })
+              .catch( err => {
+                this.loading = false;
+              })
+          } else {
+              this.options4 = [];
+          }
+        },
+	mediaSearchSuccess: function() {
+          // "author": "jason",
+            // "bodyTitle": "新文章",
+            // "frontViewLink": "",     //  主视图的url
+            // "id": 0,                       // 文章id   0--首次发布   修改---文章id
+            // "keyword": "新文章",
+            // "listViewLink": "",      // 列表图的url
+            // "mainBody": "<div>我是一个新文章</div>",          // html     
+            // "oneId": 2,                   
+            // "summary": "新文章",          // 摘要
+            // "thumbnailLink": "",    // 缩略图的url
+            // "twoId": 1,
+            // "videoLink": ""         // 视频 url 
+            switch(this._mediaOutput) {
+              case 'smallImg':
+                this.changeOptions.thumbnailLink = this.mediaSearchValue; 
+                // this._mediaOutput = 'smallImg';
+                break;
+              case 'listImg':
+                this.changeOptions.listViewLink = this.mediaSearchValue; 
+                // this._mediaOutput = 'listImg';
+                break;
+              case 'mainImg':
+                this.changeOptions.frontViewLink = this.mediaSearchValue; 
+                // this._mediaOutput = 'mainImg';
+                break;
+              case 'video':
+                this.changeOptions.videoLink = this.mediaSearchValue; 
+                // this._mediaOutput = 'mainImg';
+                break;
+            }
+            this.mediaSearchDialog =false;
+        },
         // 搜索文章
         hangleSearch: function() {
             this.searchOptions.oneId = this.oneFilterJson.id;
@@ -522,6 +720,7 @@
 
             this.$post('/admin//body/articleSearch', this.searchOptions)
             .then( res => {
+	      this.pageList = res.data;
               this.backMsg = res.data.list;
             })
             .catch(err => {
@@ -625,6 +824,7 @@
         changeViewTab: function() {
             this.$post('/admin/body/articleSearch', this.viewOptions)
             .then(res => {
+	      this.pageList = res.data;
               this.backMsg = res.data.list;
             })
             .catch( err => {
@@ -839,7 +1039,7 @@
                     this.backMsg = this.backMsg.filter(function(v){
                       return row.titleId !== v.titleId;
                     });
-                    console.log(this.backMsg)
+                    this.changeViewTab();
                     this.$message({
                       message: '操作成功',
                       type: 'success'
@@ -953,14 +1153,10 @@
 
               this.infoUpdate = false;
               this.opacityStyle = true;
+
+              this.changeViewTab();
           })
         },
-        handleSizeChange(val) {
-          console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-          console.log(`当前页: ${val}`);
-        }
       }
   }
 
@@ -972,6 +1168,18 @@
     border: 1px solid #ccc;
     line-height: 34px;
     padding: 0 10px;
+  }
+  .marginL{
+    margin-left: 30px;
+  }
+  .searchTitle{
+    width: 105px;
+  }
+  .search-input{
+    width: 196px;
+  }
+  .marginT{
+    margin: 15px 0;
   }
 }
 </style>

@@ -15,12 +15,12 @@
             <i class="el-icon-location"></i>
             <span>用户管理</span>
           </template> -->
-          <el-menu-item-group>
+          <!-- <el-menu-item-group>
             <el-menu-item index="/userModule/fountuser/index">前台用户</el-menu-item>
           </el-menu-item-group>
           <el-menu-item-group>
             <el-menu-item index="/userModule/adminuser/index">后台用户</el-menu-item>
-          </el-menu-item-group>
+          </el-menu-item-group> -->
         <!-- </el-submenu> -->
         <!-- <el-submenu index="2">
           <template slot="title">
