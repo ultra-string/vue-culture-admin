@@ -718,7 +718,7 @@
             }
             console.log(this.searchOptions);
 
-            this.$post('/admin//body/articleSearch', this.searchOptions)
+            this.$post('/admin/body/articleSearch', this.searchOptions)
             .then( res => {
 	      this.pageList = res.data;
               this.backMsg = res.data.list;
