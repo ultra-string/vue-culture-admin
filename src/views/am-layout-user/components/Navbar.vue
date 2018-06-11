@@ -56,7 +56,7 @@
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided>
-            <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
+            <span @click="logout" style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -95,9 +95,18 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
+      sessionStorage.clear();
+       this.$userGet('/user/logout')
+        .then( res => {
+            this.$store.dispatch('LogOut').then(() => {
+              location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+            })
+        })
+        .catch( err => {
+            this.$store.dispatch('LogOut').then(() => {
+              location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+            })
+        })
     }
   }
 }

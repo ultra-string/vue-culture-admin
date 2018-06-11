@@ -16,7 +16,7 @@
         </el-option>
       </el-select> -->
       <!-- el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button> -->
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
+      <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button> -->
       <!-- <el-button class="filter-item" type="primary" :loading="downloadLoading" v-waves icon="el-icon-download" @click="handleDownload">{{$t('table.export')}}</el-button>
       <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showReviewer">{{$t('table.reviewer')}}</el-checkbox> -->
     </div>
@@ -33,16 +33,20 @@
           <span>{{scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="平台名称" min-width="100">
+      <el-table-column align="center" label="平台名称" min-width="100">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span>{{scope.row.oneTitleName}}</span>
           <!-- <el-tag>{{scope.row.type | typeFilter}}</el-tag> -->
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="url链接" min-width="100">
         <template slot-scope="scope">
-          <!-- <el-tag :type="scope.row.status | statusFilter">{{scope.row.url}}</el-tag> -->
-          <span>{{scope.row.url}}</span>
+          <span>{{scope.row.oneTitleLinkUrl}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column class-name="status-col" label="图片" min-width="100">
+        <template slot-scope="scope">
+          <img style="width:200px;height:120px" :src="scope.row.imgUrl" alt="">
         </template>
       </el-table-column>
       <el-table-column width="150px" align="center" label="更新日期">
@@ -53,17 +57,13 @@
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <!-- <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{$t('table.publish')}}
+          <!-- <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button> -->
-         <!--  <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{$t('table.draft')}}
-          </el-button> -->
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-pagination
+    <!-- <el-pagination
       style="width: 400px;margin:30px auto;"
       @current-change="handleCurrentChange"
       :current-page.sync="viewOptions.pageNo"
@@ -72,19 +72,18 @@
       layout="total, prev, pager, next"
       :total="pageList.total"
       :page-count="pageList.pages">
-    </el-pagination>
+    </el-pagination> -->
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <!-- <el-form-item label="编号" prop="title">
-          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
-          <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item> -->
         <el-form-item label="平台名称" prop="title">
-          <el-input v-model="temp.name"></el-input>
+          <el-input v-model="temp.oneTitleName"></el-input>
         </el-form-item>
         <el-form-item label="url链接" prop="title">
-          <el-input v-model="temp.url"></el-input>
+          <el-input v-model="temp.oneTitleLinkUrl"></el-input>
+        </el-form-item>
+        <el-form-item label="图片链接" prop="title">
+          <el-input v-model="temp.imgUrl"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -94,12 +93,8 @@
       </div>
     </el-dialog>
 
-    <el-dialog title="新增" :visible.sync="dialogFormAdd">
+    <!-- <el-dialog title="新增" :visible.sync="dialogFormAdd">
       <el-form :rules="rules" ref="dataFormAdd" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <!-- <el-form-item label="编号" prop="title">
-          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
-          <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item> -->
         <el-form-item label="平台名称" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
@@ -121,7 +116,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">确定</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
   </div>
 </template>
@@ -222,10 +217,10 @@ export default {
   },
   created() {
       // 浮窗配置  /file/upload/image
-     this.$post(`/admin/titleLink/search`, this.viewOptions)
+     this.$post(`/admin/getFloatingWindow`, {id:0})
     .then( res => {
         this.pageList = res.data;
-        this.backMsg = res.data.list;
+        this.backMsg = res.data;
     })
   },
   methods: {
@@ -378,34 +373,46 @@ export default {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           console.log(tempData)
-          this.$post('/admin/titleLink/publish', {
+          this.$post('/admin/updateFloatingWindow', {
               "id": tempData.id,
-              "name": tempData.name,
-              "type": 8,
-              "url": tempData.url
+              "imgUrl": tempData.imgUrl,
+              "oneTitleLinkUrl": tempData.oneTitleLinkUrl,
+              "oneTitleName": tempData.oneTitleName
           })
           .then(res => {
-              for (const v of this.backMsg) {
-                if (v.id === this.temp.id) {
-                  const index = this.backMsg.indexOf(v)
-                  this.backMsg.splice(index, 1, this.temp)
-                  break
+            if(res.code == '000000') {
+                for (const v of this.backMsg) {
+                  if (v.id === this.temp.id) {
+                    const index = this.backMsg.indexOf(v)
+                    this.backMsg.splice(index, 1, this.temp)
+                    break
+                  }
                 }
-              }
-              this.dialogFormVisible = false;
+                
 
-              this.$post(`/admin/titleLink/search`, this.viewOptions)
-              .then( res => {
-                  this.pageList = res.data;
-                  this.backMsg = res.data.list;
-              })
+                this.$post(`/admin/getFloatingWindow`, {id:0})
+                .then( response => {
+                    this.dialogFormVisible = false;
+                    this.pageList = response.data;
+                    this.backMsg = response.data;
+                    this.$notify({
+                      title: '成功',
+                      message: '更新成功',
+                      type: 'success',
+                      duration: 2000
+                    })
+                })
+                
+                
+            }else {
+                this.$notify({
+                  title: '成功',
+                  message: res.msg,
+                  type: 'success',
+                  duration: 200
+                })
+            }
               
-              this.$notify({
-                title: '成功',
-                message: '更新成功',
-                type: 'success',
-                duration: 2000
-              })
           })
           .catch( err => {
               this.$notify({

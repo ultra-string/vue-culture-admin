@@ -1,6 +1,6 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
+    <div class="filter-container" v-if="!isAdv">
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
     </div>
 
@@ -11,9 +11,10 @@
           <span>{{scope.row.serialNumber}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台名称" min-width="100">
+      <el-table-column align="center" :label="NO2Title" min-width="200">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <img v-if="isAdv" style="width:200px;height:120px" :src="scope.row.name" alt="">
+          <span v-else>{{scope.row.name}}</span>
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="url链接" min-width="100">
@@ -26,16 +27,19 @@
           <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column min-width="150px" align="center" label="状态">
+      <el-table-column v-if="showLocation" align="center" label="广告位置">
         <template slot-scope="scope">
-          <span v-if="scope.row.status == 0">下架</span>
-          <span v-else-if="scope.row.status == 1">上架</span>
+          <span v-if="scope.row.location == 0">左</span>
+          <span v-else-if="scope.row.location == 1">右</span>
+          <span v-else-if="scope.row.location == 2">上</span>
+          <span v-else-if="scope.row.location == 3">下</span>
+          <span v-else-if="scope.row.location == 4">右下</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          <el-button v-if="!isAdv" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
           </el-button>
         </template>
       </el-table-column>
@@ -52,17 +56,24 @@
       :page-count="pageList.pages">
     </el-pagination>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="90px" style='width: 400px; margin-left:50px;'>
-        <!-- <el-form-item label="编号" prop="title">
-          <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
-          <el-input v-else v-model="temp.serialNumber"></el-input>
-        </el-form-item> -->
-        <el-form-item label="平台名称" prop="title">
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="600px">
+      <el-form :rules="rules" ref="dataForm" :model="temp" label-position="left" label-width="100px" style='width: 500px; margin-left:30px;'>
+        <el-form-item :label="NO2Title" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
         <el-form-item label="url链接" prop="title">
           <el-input v-model="temp.url"></el-input>
+        </el-form-item>
+        <el-form-item v-if="showLocation" label="广告位置" prop="title">
+          <el-radio-group v-model="temp.location">
+                <el-radio :label="0">左</el-radio>
+                <el-radio :label="1">右</el-radio>
+                <el-radio :label="2">上</el-radio>
+                <el-radio :label="3">下</el-radio>
+                <el-radio :label="4">右下</el-radio>
+            </el-radio-group>
+          <!-- <span v-if="textMap[dialogStatus] == 'add' ">{{temp.location}}</span>
+          <el-input v-else v-model="temp.serialNumber"></el-input> -->
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -78,7 +89,7 @@
           <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
           <el-input v-else v-model="temp.serialNumber"></el-input>
         </el-form-item> -->
-        <el-form-item label="平台名称" prop="title">
+        <el-form-item l:label="NO2Title" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
         <el-form-item label="url链接" prop="title">
@@ -128,9 +139,18 @@ export default {
     waves
   },
   props: {
-    type: {
-      type: Number,
-      default: 'CN'
+    type: Number,
+    NO2Title: {
+      type: String,
+      default: '平台名称'
+    },
+    showLocation: {
+      type: Boolean,
+      default: false
+    },
+    isAdv: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -384,38 +404,55 @@ export default {
           const tempData = Object.assign({}, this.temp)
           tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           console.log(tempData)
+          let location;
+          if(this.showLocation) {
+            location = tempData.location;
+          }else {
+            location = '';
+          }
           this.$post('/admin/titleLink/publish', {
               "id": tempData.id,
               "name": tempData.name,
               "type": this.type,
-              "url": tempData.url
+              "url": tempData.url,
+              "location": location
           })
           .then(res => {
-              for (const v of this.backMsg) {
-                if (v.id === this.temp.id) {
-                  const index = this.backMsg.indexOf(v)
-                  this.backMsg.splice(index, 1, this.temp)
-                  break
-                }
-              }
-              this.dialogFormVisible = false;
+            if(res.code == '000000') {
+                for (const v of this.backMsg) {
+                    if (v.id === this.temp.id) {
+                      const index = this.backMsg.indexOf(v)
+                      this.backMsg.splice(index, 1, this.temp)
+                      break
+                    }
+                  }
+                  this.dialogFormVisible = false;
 
-              this.$post(`/admin/titleLink/search`, {
-                type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
-                pageNo: this.currentPage,  // 页数 
-                pageSize: 10   // 请求多少条
-              })
-              .then( res => {
-                  this.pageList = res.data;
-                  this.backMsg = res.data.list;
-              })
+                  this.$post(`/admin/titleLink/search`, {
+                    type: this.type,  // 0:新媒体 1:首页头条配置 2: 首页广告 3:二维码 4:banner 5:专题策划一组 6:专题策划二组 7:专题策划广告 8:浮窗配置
+                    pageNo: this.currentPage,  // 页数 
+                    pageSize: 10   // 请求多少条
+                  })
+                  .then( response => {
+                      this.pageList = response.data;
+                      this.backMsg = response.data.list;
+                  })
 
-              this.$notify({
-                title: '成功',
-                message: '更新成功',
-                type: 'success',
-                duration: 2000
-              })
+                  this.$notify({
+                    title: '成功',
+                    message: '更新成功',
+                    type: 'success',
+                    duration: 2000
+                  })
+            }else {
+                  this.$notify({
+                    title: '成功',
+                    message: res.msg,
+                    type: 'success',
+                    duration: 2000
+                  })
+            }
+              
           })
           .catch( err => {
               this.$notify({

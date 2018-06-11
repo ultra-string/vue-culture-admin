@@ -29,7 +29,7 @@
               <el-button type="primary" @click="searchName">搜索</el-button>
             </el-col>
             <el-col :span="8" v-if="type.userType == 1">
-              <el-button :disabled="!rootAdmin" type="warning" @click="addUser">添加</el-button>
+              <el-button v-if="rootAdmin" :disabled="!rootAdmin" type="warning" @click="addUser">添加</el-button>
             </el-col>
           </el-row>
         </el-col>
@@ -298,11 +298,13 @@ export default {
     },
     getList() {
       this.loading = true;
-      if(this.stausValue == '在用') {
-        this.viewOptions.status = 1;
-      }else {
-        this.viewOptions.status = 0;
-      }
+      // if(this.stausValue == '在用') {
+      //   this.viewOptions.status = 1;
+      // }else {
+      //   this.viewOptions.status = 0;
+      // }
+
+      this.viewOptions.status = 0;
       
       this.$post('/admin/user/userListSearch', this.viewOptions)
       .then( res => {

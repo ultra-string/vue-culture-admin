@@ -7,9 +7,8 @@ import axios from 'axios'
 // vuex 仓库引入
 import $store from '@/store/index'
 // baseUrl引入： 
-import { baseUrl } from '@/config/env'
+import { baseUrl, userBaseUrl } from '@/config/env'
 
-// console.log(baseUrl)
 
 // axios.defaults.headers.post['Content-Type'] = 'Content-Type: application/json'
 // // baseURL配置
@@ -17,6 +16,15 @@ import { baseUrl } from '@/config/env'
 
 const server = axios.create({
   baseURL: baseUrl,
+  timeout: 10000,
+  // headers: {'Content-Type': 'Content-Type: application/json'}
+  // headers: {
+  //   Authorization:`Bearer ${$store.state.user.token}`
+  // }
+});
+
+const userServer = axios.create({
+  baseURL: userBaseUrl,
   timeout: 10000,
   // headers: {'Content-Type': 'Content-Type: application/json'}
   // headers: {
@@ -35,9 +43,20 @@ axios.interceptors.request.use(function(config) {
 })
 // 响应拦截器
 axios.interceptors.response.use(function(response) {
-    // 在相应中拦截 sessionId 
-    // store.dispatch('SESSION_ID', response.data.head.SESSION_ID)
-    return response
+
+
+  if(response.config.headers.Authorization && response.config.headers.Authorization.length> 7) {
+      $store.dispatch('StoreToken', response.config.headers.Authorization.substring(7));
+  }
+
+  if(response.status == '203') {
+    sessionStorage.clear();
+    $store.dispatch('StoreToken', '');
+    location.reload()
+  }
+
+  // 在相应中拦截 sessionId 
+  return response
 }, function(error) {
     return Promise.reject(error)
 })
@@ -58,6 +77,18 @@ export function fetch(url, params = {}) {
       }
     })
     .then(response => {
+      if(response.config.headers.Authorization && response.config.headers.Authorization.length> 7) {
+          $store.dispatch('StoreToken', response.config.headers.Authorization.substring(7));
+      }
+    
+      if(response.status == '203') {
+        sessionStorage.clear();
+        $store.dispatch('StoreToken', '');
+        location.reload()
+      }
+      // if(response.config.headers && response.config.headers.Authorization.length> 7) {
+      //   $store.dispatch('StoreToken', response.config.headers.Authorization.substring(7));
+      // }
       resolve(response.data);
     })
     .catch((error) => {
@@ -73,8 +104,6 @@ export function fetch(url, params = {}) {
 *   @returns {Promise}
 */
 export function post(url, params = {}) {
-  // let request = JSON.stringify(params);
-  console.log(typeof params)
   return new Promise((resolve, reject) => {
     // post请求
     axios({
@@ -86,7 +115,6 @@ export function post(url, params = {}) {
       }
     })
       .then(response => {
-        console.log(response)
         resolve(response.data);
       })
       .catch((error) => {
@@ -94,23 +122,44 @@ export function post(url, params = {}) {
       })
   })
 }
-  
-  
-// 处理params的函数
-// function handleParams(params) {
-//     let json = {
-//       "head": {
-//         "SESSION_ID": "",
-//         "TOKEN": "",
-//         "DEVICE_ID": "",
-//         "SYSTEM_TYPE": "h5",
-//         "VERSION": ""
-//       },
-//       "param": {}
-//     }
-//     json.head.TYPE = params.head.TYPE;
-//     for (let name in params.param) {
-//       json.param[name] = params.param[name];
-//     }
-//     return 'param_key=' + JSON.stringify(json);
-// }
+
+export function auth(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    // post请求
+    axios({
+      method: 'post',
+      url: `${userBaseUrl}${url}`,
+      data: params,
+    })
+      .then(response => {
+        // if(response.config.headers && response.config.headers.Authorization.length> 7) {
+        //   $store.dispatch('StoreToken', response.config.headers.Authorization.substring(7));
+        // }
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      })
+  })
+}
+
+export function userGet(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    // get 请求
+    userServer.get(url, {
+      headers: {
+        Authorization:`Bearer ${$store.state.user.token}`
+      }
+    })
+    .then(response => {
+      // if(response.config.headers && response.config.headers.Authorization.length> 7) {
+      //   $store.dispatch('StoreToken', response.config.headers.Authorization.substring(7));
+      // }
+      resolve(response.data);
+    })
+    .catch((error) => {
+      reject(error);
+    })
+  })
+}
+

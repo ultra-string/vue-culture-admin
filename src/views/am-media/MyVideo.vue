@@ -137,6 +137,24 @@ export default {
     },
     submitForm(event) {
       event.preventDefault();
+      if(!this.mediaForm.name) {
+          this.$message({
+            message: '图片名称必须输入',
+            type: '操作失败'
+          })
+
+          return false;
+      }
+
+      if(!this.mediaForm.file) {
+          this.$message({
+            message: '请添加上传的文件',
+            type: '操作失败'
+          })
+
+          return false;
+      }
+
       let formData = new FormData();
       formData.append('fileName', this.mediaForm.fileName);
       formData.append('file', this.mediaForm.file);

@@ -7,20 +7,25 @@
  *
  */
 let baseUrl = '';
+let userBaseUrl = '';
 let routerMode = '';
 let baseImgPath;
 
 if (process.env.NODE_ENV == 'development') {
 	// baseUrl = 'http://118.190.152.1:8081'; /apis
 	baseUrl = '/apis';
+	userBaseUrl = 'http://118.190.152.1:8084';
     baseImgPath = '';
 }else{
+	// baseUrl = 'http://192.168.110.78';	
 	baseUrl = 'http://118.190.152.1:8800';
+	userBaseUrl = 'http://118.190.152.1:8084';
     baseImgPath = '';
 }
 
 export {
 	baseUrl,
 	routerMode,
-	baseImgPath
+	baseImgPath,
+	userBaseUrl
 }

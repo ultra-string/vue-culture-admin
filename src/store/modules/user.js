@@ -4,12 +4,12 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     user: '',
-    userInfo: {},
-    rootAdmin: false,
+    userInfo: sessionStorage.getItem('userInfo') ? JSON.parse(sessionStorage.getItem('userInfo')) : {},
+    rootAdmin: sessionStorage.getItem('rootAdmin') ? Number(sessionStorage.getItem('rootAdmin')) : false,
     status: '',
     code: '',
     // token: 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTUyODAxNjM2NCwiaWF0IjoxNTI3NDExNTY0fQ.zBKT8gw2AfO1CV33TzyXVWOAyeu4B535bHqSTfzKHbShHVQ-zDcivgTPHulM-RKGJA7i_vNNwZ2htnDfdw4Ngw',
-    token: '',
+    token: sessionStorage.getItem('token') ? sessionStorage.getItem('token') : '',
     name: '',
     avatar: '',
     introduction: '',
@@ -25,14 +25,18 @@ const user = {
       console.log('====>',res)
       if(res.authorities.length > 1) {
         state.rootAdmin = true;
+        sessionStorage.setItem('rootAdmin', 1)
       }else {
         state.rootAdmin = false;
+        sessionStorage.setItem('rootAdmin', 0)
       }
+      
     },
     SET_CODE: (state, code) => {
       state.code = code
     },
     SET_TOKEN: (state, token) => {
+      // sessionStorage.setItem('token', res)
       state.token = token
     },
     CLEAR_TOKEN: (state) => {
@@ -68,6 +72,7 @@ const user = {
     },
     // 保存token
     StoreToken({commit}, res) {
+      sessionStorage.setItem('token', res)
       commit('SET_TOKEN', res);
     },
     // 清除token

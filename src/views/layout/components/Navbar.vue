@@ -95,9 +95,18 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
-      })
+      sessionStorage.clear();
+       this.$userGet('/user/logout')
+        .then( res => {
+            this.$store.dispatch('LogOut').then(() => {
+              location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+            })
+        })
+        .catch( err => {
+            this.$store.dispatch('LogOut').then(() => {
+              location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+            })
+        })
     }
   }
 }

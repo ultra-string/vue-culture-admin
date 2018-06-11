@@ -52,3 +52,23 @@ private int navigateLastPage;
 
 验证码参数
 http://39.104.49.101/liu/readme/blob/master/login.md?nsukey=6DFL%2Fy2V7NdQp3a4WC6faFK9mlQAP6pftl6KHvmTHs8j1ZvD8FAL%2BIts1UTKDf3gHY8stD0P9meTz%2FchlSj888Bur9m%2Bu72q4xUKKBhCQfGEREQaXQq4AldIdDUhvhPYwxO5LG4B0Q%2BFD1RsrRiHq0QvX2jhlSSJ5gkBvFGD2KuemeZFd9NP9t7vti%2FkKhoMwWrL8hJ9Nno4RuGH5yhIKw%3D%3D
+
+
+<!-- 3.刷新用户退出   东阳
+   4.基本信息头像  王深
+   5.文件添加为空   王深
+   6.文件名称模糊查询  米富星
+   7.用户查询   米富星    -->
+   <!-- 8.浮窗配置  添加去掉  王深 -->
+   8.浮窗后台配置  逻辑得改  王深
+   9.用户添加校验手机号  米富星
+   <!-- 10.banner   平台名称改成图片地址  状态去掉   添加删除   删除去掉  王深   -->
+   <!-- 11.二维码  状态去掉   王深 -->
+   <!-- 12.新媒体  状态去掉  王深  
+   13.联系我们去掉  王深 -->
+
+
+   说明：非管理员账号： wangbowen 密码：000000
+
+
+   <!-- 明天改3个问题①刷新页面推出（和东阳沟通就好）②非超级管理员用户信息后台用户里的添加去掉③非超级管理员文章管理和专题策划里的上下架按钮去掉 -->

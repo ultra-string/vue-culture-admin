@@ -307,7 +307,7 @@
           </el-table-column>
           <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
             <template slot-scope="scope">
-              <el-button type="success" size="mini" @click="handleStatus(scope.row)">上下架</el-button>
+              <el-button v-if="rootAdmin" type="success" size="mini" @click="handleStatus(scope.row)">上下架</el-button>
               <el-button type="primary" size="mini" @click="handleCreate(scope.row, 'change')">修改</el-button>
               <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
               </el-button>
@@ -318,6 +318,7 @@
 
       <!-- 分页 -->
       <el-pagination
+        v-show="opacityStyle"
         style="width: 400px;margin:30px auto;"
         @current-change="handleCurrentChange"
         :current-page.sync="this.viewOptions.pageNo"
@@ -331,6 +332,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex';
   import UEditor from '@/components/ueditor/ueditor.vue'
   import CmVideoPlayer from '@/components/am-video/cm-video'
 
@@ -339,6 +341,11 @@
       components: {
         UEditor,
         CmVideoPlayer
+      },
+      computed: {
+        ...mapGetters([
+          'rootAdmin'
+        ]),
       },
       props: {
         info: Object
@@ -718,7 +725,7 @@
             }
             console.log(this.searchOptions);
 
-            this.$post('/admin//body/articleSearch', this.searchOptions)
+            this.$post('/admin/body/articleSearch', this.searchOptions)
             .then( res => {
 	      this.pageList = res.data;
               this.backMsg = res.data.list;
@@ -1112,49 +1119,57 @@
 
           this.$post('/admin/body/articlePublish', this.changeOptions)
           .then( res => {
-              let addOptions = {
-                "serialNumber": 1,
-                "oneId": 2,
-                "twoId": 1,
-                "titleId": 67,
-                "bodyTitle": "",
-                "author": "",
-                "createTime": "",
-                "updateTime": "",
-                "status": 1,
-                "updateTime": `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`
-              };
+              if(res.code == '000000') {
+                let addOptions = {
+                    "serialNumber": 1,
+                    "oneId": 2,
+                    "twoId": 1,
+                    "titleId": 67,
+                    "bodyTitle": "",
+                    "author": "",
+                    "createTime": "",
+                    "updateTime": "",
+                    "status": 1,
+                    "updateTime": `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`
+                  };
 
-              console.log('end===>', addOptions)
-              console.log('up=====>', this.changeOptions)
-              let index = 0;
-              if(this.changeMode == "change") {
-                let obj = {};
-                obj = this.backMsg.find( (item) => {
-                  return item.titleId == this.changeOptions.id;
-                })
-                this.changeOptions.serialNumber = obj.serialNumber;
-                this.changeOptions.status = obj.status;
-                this.changeOptions.titleId = obj.titleId;
-                this.changeOptions.updateTime = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
-                console.log('find==>', obj)
-                index = this.backMsg.indexOf(obj);
-                this.backMsg.splice(index, 1, this.changeOptions);
-                console.log('结果====》', this.changeOptions)
+                  console.log('end===>', addOptions)
+                  console.log('up=====>', this.changeOptions)
+                  let index = 0;
+                  if(this.changeMode == "change") {
+                    let obj = {};
+                    obj = this.backMsg.find( (item) => {
+                      return item.titleId == this.changeOptions.id;
+                    })
+                    this.changeOptions.serialNumber = obj.serialNumber;
+                    this.changeOptions.status = obj.status;
+                    this.changeOptions.titleId = obj.titleId;
+                    this.changeOptions.updateTime = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
+                    console.log('find==>', obj)
+                    index = this.backMsg.indexOf(obj);
+                    this.backMsg.splice(index, 1, this.changeOptions);
+                    console.log('结果====》', this.changeOptions)
+                  }else {
+                      this.changeOptions.serialNumber = 0;
+                      this.changeOptions.status = 1;
+                      this.changeOptions.titleId = 0;
+                      this.changeOptions.updateTime = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
+                      console.log(this.changeOptions)
+                      this.backMsg.unshift(this.changeOptions);
+                      
+                  }
+
+                  this.infoUpdate = false;
+                  this.opacityStyle = true;
+
+                  this.changeViewTab();
               }else {
-                  this.changeOptions.serialNumber = 0;
-                  this.changeOptions.status = 1;
-                  this.changeOptions.titleId = 0;
-                  this.changeOptions.updateTime = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`;
-                  console.log(this.changeOptions)
-                  this.backMsg.unshift(this.changeOptions);
-                  
+                this.$message({
+                  message: res.msg,
+                  type: 'error'
+                })
               }
-
-              this.infoUpdate = false;
-              this.opacityStyle = true;
-
-              this.changeViewTab();
+              
           })
         },
       }

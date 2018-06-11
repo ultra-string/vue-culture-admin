@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       smsSend: false,
-      smscodeImg: `http://118.190.152.1:8084/imageVali/`,
+      smscodeImg: `http://118.190.152.1:8084/user/imageVali/`,
       loginForm: {
         username: '',
         smscode: '',
@@ -90,7 +90,7 @@ export default {
   methods: {
     // 获取验证码
     getSmsCode: function() {
-      this.smscodeImg = `http://118.190.152.1:8084/imageVali/?time=${new Date().getTime()}`;
+      this.smscodeImg = `http://118.190.152.1:8084/user/imageVali/?time=${new Date().getTime()}`;
     },
     showPwd() {
       if (this.passwordType === 'password') {
@@ -101,44 +101,77 @@ export default {
     },
     handleLogin() {
       console.log(this.loginForm.username.trim(), this.loginForm.password.trim())
-      this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim(),code: this.loginForm.smscode})
-      .then(res => {
-        console.log(res.data)
-        if(res.code == '000000') {
-            this.$store.dispatch('StoreToken', res.data);
-            this.$get('/admin/user')
-            .then(res => {
-              if(res.code == '000000') {
-                  this.$store.commit('AM_STORE_USER_INFO', res.data);
+      this.$auth('/user/auth', {
+        username: this.loginForm.username.trim(),
+        password: this.loginForm.password.trim(),
+        code: this.loginForm.smscode
+      })
+      .then( res => {
+          if( res.code == '000000') {
+              this.$store.dispatch('StoreToken', res.data);
+              this.$get('/admin/user')
+              .then( response => {
+                  this.$store.commit('AM_STORE_USER_INFO', response.data);
+                  sessionStorage.setItem('userInfo', JSON.stringify(response.data) )
                   this.$router.push({path: '/'});
-              }else {
-                this.$notify.error({
-                  title: '登录错误',
-                  message: res.msg
-                });
-              }
-              
-            })
-            .catch( err => {
-                this.$notify.error({
-                  title: '错误',
-                  message: err
-                });
-            })
-        }else {
+              })
+              .catch( error => {
+                  this.$notify.error({
+                    title: '错误',
+                    message: error
+                  });
+              })
+          }else {
             this.$notify.error({
-              title: '登录错误',
+              title: '错误',
               message: res.msg
             });
-        }
-        
+          }
       })
       .catch(err => {
           this.$notify.error({
-            title: '登录错误',
+            title: '错误',
             message: '账号或密码错误'
           });
       })
+      // this.$post('/auth', {username: this.loginForm.username.trim(),password: this.loginForm.password.trim(),code: this.loginForm.smscode})
+      // .then(res => {
+      //   if(res.code == '000000') {
+      //       this.$store.dispatch('StoreToken', res.data);
+      //       this.$get('/admin/user')
+      //       .then(response => {
+      //         if(reresponses.code == '000000') {
+      //             this.$store.commit('AM_STORE_USER_INFO', response.data);
+      //             this.$router.push({path: '/'});
+      //         }else {
+      //           this.$notify.error({
+      //             title: '登录错误',
+      //             message: res.msg
+      //           });
+      //         }
+
+      //       })
+      //       .catch( err => {
+      //           this.$notify.error({
+      //             title: '错误',
+      //             message: err
+      //           });
+      //       })
+      //   }else {
+      //       this.$notify.error({
+      //         title: '登录错误',
+      //         message: res.msg
+      //       });
+      //   }
+
+      // })
+      // .catch(error => {
+      //   alert(error)
+      //     this.$notify.error({
+      //       title: '登录错误',
+      //       message: '账号或密码错误'
+      //     });
+      // })
     },
     afterQRScan() {
       // const hash = window.location.hash.slice(1)

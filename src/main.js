@@ -17,7 +17,7 @@ import './errorLog'// error log
 // import './permission' // permission control
 import './mock' // simulation data
 // axios封装引入
-import { fetch, post } from '@/api/api'
+import { fetch, post, auth, userGet } from '@/api/api'
 import { posts } from '@/api/tokenApi'
 
 import * as filters from './filters' // global filters
@@ -38,6 +38,10 @@ Vue.config.productionTip = false
 Vue.prototype.$post = post;
 // get 请求使用 this.$get
 Vue.prototype.$get = fetch;
+// 用户的登录接口
+Vue.prototype.$auth = auth;
+// 用户的get接口
+Vue.prototype.$userGet = userGet;
 // 8084 的get请求
 Vue.prototype.$posts = posts;
 

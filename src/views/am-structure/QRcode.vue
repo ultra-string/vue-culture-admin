@@ -11,7 +11,7 @@
           <span>{{scope.row.serialNumber}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台名称" min-width="100">
+      <el-table-column align="center" label="平台名称" min-width="100">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
@@ -26,12 +26,12 @@
           <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" align="center" label="状态">
+      <!-- <el-table-column min-width="150px" align="center" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.status == 0">下架</span>
           <span v-else-if="scope.row.status == 1">上架</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
+    <!-- <div class="filter-container">
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
-    </div>
+    </div> -->
 
     <el-table :key='tableKey' :data="this.backMsg"  border fit highlight-current-row
       style="width: 100%">
@@ -11,7 +11,7 @@
           <span>{{scope.row.serialNumber}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="平台名称" min-width="100">
+      <el-table-column  align="center" label="图片地址" min-width="100">
         <template slot-scope="scope">
           <span>{{scope.row.name}}</span>
         </template>
@@ -26,17 +26,17 @@
           <span>{{scope.row.updateTime}}</span>
         </template>
       </el-table-column>
-      <el-table-column min-width="150px" align="center" label="状态">
+      <!-- <el-table-column min-width="150px" align="center" label="状态">
         <template slot-scope="scope">
           <span v-if="scope.row.status == 0">下架</span>
           <span v-else-if="scope.row.status == 1">上架</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column align="center" label="操作" width="230" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
-          </el-button>
+          <!-- <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">删除
+          </el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -59,7 +59,7 @@
           <span v-if="textMap[dialogStatus] == 'add' ">{{temp.serialNumber}}</span>
           <el-input v-else v-model="temp.serialNumber"></el-input>
         </el-form-item> -->
-        <el-form-item label="平台名称" prop="title">
+        <el-form-item label="图片地址" prop="title">
           <el-input v-model="temp.name"></el-input>
         </el-form-item>
         <el-form-item label="url链接" prop="title">
