@@ -1,11 +1,11 @@
 <template>
   <div class="am-content">
-    <div v-show="infoUpdate"  style="margin: 30px 0;">
+    <div v-show="infoUpdate"  style="margin: 30px auto;width:770px">
         
        <el-row>
             <el-col :span="12" class="clearfix">
               <div class="searchTitle fl">一级标题</div>
-              <el-select class="fl" v-model="change_oneIDValue" placeholder="请选择" @change="changeOneIdChange">
+              <el-select style="marginLeft:24px" class="fl" v-model="change_oneIDValue" placeholder="请选择" @change="changeOneIdChange">
                 <el-option
                   v-for="item in change_oneIdOptions"
                   :key="item.id"
@@ -17,7 +17,7 @@
 
             <el-col :span="12" class="clearfix">
               <div class="searchTitle fl">二级标题</div>
-              <el-select class="fl" v-model="change_twoIDValue" placeholder="请选择" @change="changeTwoIdChange">
+              <el-select style="marginLeft:24px" class="fl" v-model="change_twoIDValue" placeholder="请选择" @change="changeTwoIdChange">
                 <el-option
                   v-for="item in change_twoIdOptions"
                   :key="item.id"
@@ -29,50 +29,50 @@
           </el-row>
 
           <el-row  style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">标题</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.bodyTitle" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">标题</div></el-col>
+              <el-col :span="12"><el-input class="" v-model="changeOptions.bodyTitle" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row  style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">作者：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.author" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">作者：</div></el-col>
+              <el-col :span="12"><el-input class="" v-model="changeOptions.author" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row  style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">摘要：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.summary" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">摘要：</div></el-col>
+              <el-col :span="12"><el-input class="" v-model="changeOptions.summary" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">关键词：</div></el-col>
-              <el-col :span="6"><el-input class="" v-model="changeOptions.keyword" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">关键词：</div></el-col>
+              <el-col :span="12"><el-input class="" v-model="changeOptions.keyword" placeholder="请输入内容"></el-input></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">缩略图：</div></el-col>
-              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">缩略图：</div></el-col>
+              <el-col :span="12"><el-input :disabled="true" class="" v-model="changeOptions.thumbnailLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning" @click="SearchMedia('smallImg')">查询</el-button></el-col>
           </el-row>
          
           <el-row style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">列表图：</div></el-col>
-              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">列表图：</div></el-col>
+              <el-col :span="12"><el-input :disabled="true" class="" v-model="changeOptions.listViewLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning" @click="SearchMedia('listImg')">查询</el-button></el-col>
           </el-row>
 
           <el-row style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">主视图：</div></el-col>
-              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">主视图：</div></el-col>
+              <el-col :span="12"><el-input :disabled="true" class="" v-model="changeOptions.frontViewLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning" @click="SearchMedia('mainImg')">查询</el-button></el-col>
           </el-row>
           
           <el-row style="marginTop:10px;">
-              <el-col :span="2"><div class="searchTitle">视频：</div></el-col>
-              <el-col :span="6"><el-input :disabled="true" class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
+              <el-col :span="4"><div class="searchTitle">视频：</div></el-col>
+              <el-col :span="12"><el-input :disabled="true" class="" v-model="changeOptions.videoLink" placeholder="请输入内容"></el-input></el-col>
               <el-col :span="2"><el-button type="warning" @click="SearchMedia('video')">查询</el-button></el-col>
           </el-row>
 
-        <div style="margin: 30px 0;">
+        <div style="margin: 30px auto; width: 770px">
           <UEditor style="marginTop:10px;" :config=config ref="ueditor"></UEditor>
         </div>
         <div slot="footer" class="dialog-footer" style="marginLeft: 45%; marginTop: 30px;marginBottom: 30px;">
@@ -531,99 +531,132 @@
             //可以在此处定义工具栏的内容
             toolbars: [
              [
-                // 'anchor', //锚点
+                'source', //源代码
+                '|',
+
                 'undo', //撤销
                 'redo', //重做
+                '|',
+
                 'bold', //加粗
-                'indent', //首行缩进
-                // 'snapscreen', //截图
                 'italic', //斜体
                 'underline', //下划线
+                'fontborder', //字符边框
                 'strikethrough', //删除线
                 'subscript', //下标
-                'fontborder', //字符边框
                 'superscript', //上标
+                'removeformat', //清除格式
                 'formatmatch', //格式刷 
-             
-                // 'source', //源代码
+                'autotypeset', //自动排版
                 'blockquote', //引用
-                // 'pasteplain', //纯文本粘贴模式
-                'selectall', //全选
-                // 'print', //打印
-                // 'preview', //预览
-                'horizontal', //分隔线
-                // 'removeformat', //清除格式
-                'time', //时间
-                'date', //日期
-                // 'unlink', //取消链接
-                // 'insertrow', //前插入行
-                // 'insertcol', //前插入列
-                // 'mergeright', //右合并单元格
-                // 'mergedown', //下合并单元格
-                // 'deleterow', //删除行
-                // 'deletecol', //删除列
-                // 'splittorows', //拆分成行
-                // 'splittocols', //拆分成列
-                // 'splittocells', //完全拆分单元格
-                // 'deletecaption', //删除表格标题
-                // 'inserttitle', //插入标题
-                // 'mergecells', //合并多个单元格
-                // 'deletetable', //删除表格
-                // 'cleardoc', //清空文档
-                // 'insertparagraphbeforetable', //"表格前插入行"
-                // 'insertcode', //代码语言
-                'fontfamily', //字体
-                'fontsize', //字号
-                'paragraph', //段落格式
-                // 'simpleupload', //单图上传
-                'insertimage', //多图上传
-                // 'edittable', //表格属性
-                // 'edittd', //单元格属性
-                'link', //超链接
-                'emotion', //表情
-                'spechars', //特殊字符
-                'searchreplace', //查询替换
-                // 'map', //Baidu地图
-                // 'gmap', //Google地图
-                // 'insertvideo', //视频
-                'help', //帮助
-              ],
-              [
-                'justifyleft', //居左对齐
-                'justifyright', //居右对齐
-                'justifycenter', //居中对齐
-                'justifyjustify', //两端对齐
+                'pasteplain', //纯文本粘贴模式
+                '|',
+
                 'forecolor', //字体颜色
                 'backcolor', //背景色
                 'insertorderedlist', //有序列表
                 'insertunorderedlist', //无序列表
-                'fullscreen', //全屏
-                // 'directionalityltr', //从左向右输入
-                // 'directionalityrtl', //从右向左输入
+                'selectall', //全选
+                'cleardoc', //清空文档
+                '|',
+
                 'rowspacingtop', //段前距
                 'rowspacingbottom', //段后距
-                // 'pagebreak', //分页
-                // 'insertframe', //插入Iframe
+                'lineheight', //行间距
+                
+               ],
+               [
+                'customstyle', //自定义标题
+                'paragraph', //段落格式
+                'fontfamily', //字体
+                'fontsize', //字号
+                'directionalityltr', //从左向右输入
+                'directionalityrtl', //从右向左输入
+                'indent', //首行缩进
+                '|',
+
+                'justifyleft', //居左对齐
+                'justifyright', //居右对齐
+                'justifycenter', //居中对齐
+                'justifyjustify', //两端对齐
+                '|',
+
+                'touppercase', //字母大写
+                'tolowercase', //字母小写
+                '|',
+
+                'link', //超链接
+                'unlink', //取消链接
+                'anchor', //锚点
+                '|',
+
                 'imagenone', //默认
                 'imageleft', //左浮动
                 'imageright', //右浮动
-                'attachment', //附件
                 'imagecenter', //居中
-                'wordimage', //图片转存
-                'lineheight', //行间距
-                'edittip ', //编辑提示
-                'customstyle', //自定义标题
-                'autotypeset', //自动排版
-                // 'webapp', //百度应用
-                'touppercase', //字母大写
-                'tolowercase', //字母小写
-                // 'background', //背景
-                // 'template', //模板
+
+               ],
+               [
+                'insertimage', //多图上传
+                'emotion', //表情
                 'scrawl', //涂鸦
+                'attachment', //附件
+                // 百度谷歌地图iframe
+
+                'insertcode', //代码语言
+                // 百度应用
+                'pagebreak', //分页
+                'template', //模板
+                'background', //背景
+                '|',
+
+                'horizontal', //分隔线
+                'date', //日期
+                'time', //时间
+                'spechars', //特殊字符
+                'snapscreen', //截图
+                'wordimage', //图片转存
+                '|',
+
+                'inserttable', //插入表格
+                'deletetable', //删除表格
+                'insertparagraphbeforetable', //"表格前插入行"
+                'insertrow', //前插入行
+                'deleterow', //删除行
+                'insertcol', //前插入列
+                'deletecol', //删除列
+                '|',
+
+                // 'edittip ', //编辑提示
+                'mergecells', //合并多个单元格
+                'mergeright', //右合并单元格
+                'mergedown', //下合并单元格
+                'splittocells', //完全拆分单元格
+                'splittorows', //拆分成行
+                'splittocols', //拆分成列
+                'charts', // 图表
+              ],
+              [
+                'print', //打印
+                'preview', //预览
+                'searchreplace', //查询替换
+                'help', //帮助
+                'drafts', // 从草稿箱加载
+                
+                
+                'fullscreen', //全屏
+                
+                // 'webapp', //百度应用
                 // 'music', //音乐
-                // 'inserttable', //插入表格
-                // 'drafts', // 从草稿箱加载
-                // 'charts', // 图表
+                // 'deletecaption', //删除表格标题
+                // 'inserttitle', //插入标题
+                // 'insertframe', //插入Iframe
+                // 'simpleupload', //单图上传
+                // 'edittable', //表格属性
+                // 'edittd', //单元格属性
+                // 'map', //Baidu地图
+                // 'gmap', //Google地图
+                // 'insertvideo', //视频
               ]
             ],
             zIndex: 1000,  // 编辑器的层级

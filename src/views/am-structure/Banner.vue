@@ -11,9 +11,10 @@
           <span>{{scope.row.serialNumber}}</span>
         </template>
       </el-table-column>
-      <el-table-column  align="center" label="图片地址" min-width="100">
-        <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+      <el-table-column  align="center" label="图片" min-width="100">
+        <template slot-scope="scope" v-if="scope.row.name">
+          <img style="width:200px;height:120px" :src="scope.row.name" alt="">
+          <!-- <span>{{scope.row.name}}</span> -->
         </template>
       </el-table-column>
       <el-table-column class-name="status-col" label="url链接" min-width="100">
